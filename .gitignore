@@ -87,6 +87,8 @@ StyleCopReport.xml
 *.pidb
 *.svclog
 *.scc
+*.resx
+*.dll
 
 # Chutzpah Test files
 _Chutzpah*
@@ -338,3 +340,14 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
+
+# Pictures
+*.jpg
+*.png
+*.jpeg
+
+# Videos
+*.avi
+*.mp4
+*.mov
+/FA_Millionaire/FA_Millionaire.vcxproj
