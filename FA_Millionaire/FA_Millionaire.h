@@ -112,10 +112,8 @@ namespace FAMillionaire {
 			this->axWindowsMediaPlayer1->Location = System::Drawing::Point(0, -1);
 			this->axWindowsMediaPlayer1->Name = L"axWindowsMediaPlayer1";
 			this->axWindowsMediaPlayer1->OcxState = (cli::safe_cast<System::Windows::Forms::AxHost::State^>(resources->GetObject(L"axWindowsMediaPlayer1.OcxState")));
-			this->axWindowsMediaPlayer1->Size = System::Drawing::Size(FAMillionaire::FA_Millionaire::GetDesktopResolution(true),
-				FAMillionaire::FA_Millionaire::GetDesktopResolution(false));
+			this->axWindowsMediaPlayer1->Size = System::Drawing::Size(0, 0);
 			this->axWindowsMediaPlayer1->TabIndex = 0;
-			//this->axWindowsMediaPlayer1->fullScreen = true;
 			// 
 			// pictureBox1
 			// 
@@ -218,14 +216,10 @@ namespace FAMillionaire {
 			// 
 			// FA_Millionaire
 			// 
-			//this->AutoScaleDimensions = System::Drawing::SizeF(9, 20);
-			//this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->BackColor = System::Drawing::Color::Black;
-			this->ClientSize = System::Drawing::Size(FAMillionaire::FA_Millionaire::GetDesktopResolution(true), 
-				FAMillionaire::FA_Millionaire::GetDesktopResolution(false));
-			//this->ClientSize = System::Drawing::Size(1366, 724);
-			FormBorderStyle = Windows::Forms::FormBorderStyle::None;
-			WindowState = FormWindowState::Maximized;
+			this->ClientSize = System::Drawing::Size(1366, 724);
+			//this->axWindowsMediaPlayer1->Size = System::Drawing::Size(FAMillionaire::FA_Millionaire::GetDesktopResolution(true),
+			//	FAMillionaire::FA_Millionaire::GetDesktopResolution(false));
 			this->Controls->Add(this->axWindowsMediaPlayer1);
 			this->Controls->Add(this->audience);
 			this->Controls->Add(this->phone);
@@ -238,8 +232,11 @@ namespace FAMillionaire {
 			this->Controls->Add(this->pictureBox2);
 			this->Controls->Add(this->pictureBox1);
 			this->Controls->Add(this->picturePrizeChart);
+			this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::None;
+			this->KeyPreview = true;
 			this->Name = L"FA_Millionaire";
 			this->Text = L"FA_Millionaire";
+			this->WindowState = System::Windows::Forms::FormWindowState::Maximized;
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->picturePrizeChart))->EndInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->axWindowsMediaPlayer1))->EndInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox1))->EndInit();
@@ -252,12 +249,12 @@ namespace FAMillionaire {
 
 		FAMillionaire::FA_Millionaire::SetTimer(100);
 
-		if (FAMillionaire::FA_Millionaire::GetTimer() == 1000)
+		if (FAMillionaire::FA_Millionaire::GetTimer() == 500)
 		{
 			axWindowsMediaPlayer1->fullScreen = true;
 		}
 
-		if (FAMillionaire::FA_Millionaire::GetTimer() == 2000)
+		if (FAMillionaire::FA_Millionaire::GetTimer() == 37000 /*INTRO_TIME*/)
 		{
 			/*FAMillionaire::FA_Millionaire::*/axWindowsMediaPlayer1->close();
 			/*FAMillionaire::FA_Millionaire::*/axWindowsMediaPlayer1->Hide();
