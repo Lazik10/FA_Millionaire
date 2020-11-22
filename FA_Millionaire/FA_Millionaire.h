@@ -1,4 +1,5 @@
 #pragma once
+#include "Questions.h"
 
 namespace FAMillionaire {
 
@@ -9,7 +10,7 @@ namespace FAMillionaire {
 	using namespace System::Data;
 	using namespace System::Drawing;
 
-	const int INTRO_TIME = 39000;
+	const int INTRO_TIME = 15000;
 
 	/// <summary>
 	/// Summary for FA_Millionaire
@@ -24,10 +25,12 @@ namespace FAMillionaire {
 			//TODO: Add the constructor code here
 			//
 		}
-	private: System::Windows::Forms::Button^ answer_A;
-	private: System::Windows::Forms::Button^ answer_B;
-	private: System::Windows::Forms::Button^ answer_C;
-	private: System::Windows::Forms::Button^ answer_D;
+	public: static System::Windows::Forms::Button^ answer_A;
+	public: static System::Windows::Forms::Button^ answer_B;
+	public: static System::Windows::Forms::Button^ answer_C;
+	public: static System::Windows::Forms::Button^ answer_D;
+	public: static System::Windows::Forms::Label^ question;
+
 	private: System::Windows::Forms::Button^ fifty_fifty;
 	private: System::Windows::Forms::Button^ phone;
 	private: System::Windows::Forms::Button^ audience;
@@ -55,8 +58,6 @@ namespace FAMillionaire {
 	private: System::Windows::Forms::PictureBox^ picturePrizeChart;
 	private: System::Windows::Forms::PictureBox^ pictureBox1;
 	private: System::Windows::Forms::PictureBox^ pictureBox2;
-	private: System::Windows::Forms::Label^ question;
-
 	private: System::Windows::Forms::Timer^ timer;
 	private: System::ComponentModel::IContainer^ components;
 
@@ -139,7 +140,9 @@ namespace FAMillionaire {
 			// 
 			this->question->BackColor = System::Drawing::Color::Transparent;
 			this->question->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
-			this->question->ForeColor = System::Drawing::Color::Transparent;
+			this->question->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 14, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->question->ForeColor = System::Drawing::Color::Yellow;
 			this->question->Location = System::Drawing::Point(90, 396);
 			this->question->Name = L"question";
 			this->question->Size = System::Drawing::Size(619, 68);
@@ -153,39 +156,79 @@ namespace FAMillionaire {
 			// 
 			// answer_A
 			// 
-			this->answer_A->Location = System::Drawing::Point(94, 489);
+			this->answer_A->BackColor = System::Drawing::Color::Transparent;
+			this->answer_A->BackgroundImageLayout = System::Windows::Forms::ImageLayout::None;
+			this->answer_A->FlatAppearance->BorderSize = 0;
+			this->answer_A->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
+			this->answer_A->Font = (gcnew System::Drawing::Font(L"Copperplate Gothic Bold", 14, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->answer_A->ForeColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(255)), static_cast<System::Int32>(static_cast<System::Byte>(128)),
+				static_cast<System::Int32>(static_cast<System::Byte>(0)));
+			this->answer_A->Location = System::Drawing::Point(85, 489);
 			this->answer_A->Name = L"answer_A";
-			this->answer_A->Size = System::Drawing::Size(243, 36);
+			this->answer_A->Size = System::Drawing::Size(252, 36);
 			this->answer_A->TabIndex = 5;
 			this->answer_A->Text = L"A: answer";
-			this->answer_A->UseVisualStyleBackColor = true;
+			this->answer_A->TextAlign = System::Drawing::ContentAlignment::MiddleLeft;
+			this->answer_A->UseVisualStyleBackColor = false;
+			this->answer_A->Click += gcnew System::EventHandler(this, &FA_Millionaire::answer_A_Click);
 			// 
 			// answer_B
 			// 
+			this->answer_B->BackColor = System::Drawing::Color::Transparent;
+			this->answer_B->BackgroundImageLayout = System::Windows::Forms::ImageLayout::None;
+			this->answer_B->FlatAppearance->BorderSize = 0;
+			this->answer_B->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
+			this->answer_B->Font = (gcnew System::Drawing::Font(L"Copperplate Gothic Bold", 14, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->answer_B->ForeColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(255)), static_cast<System::Int32>(static_cast<System::Byte>(128)),
+				static_cast<System::Int32>(static_cast<System::Byte>(0)));
 			this->answer_B->Location = System::Drawing::Point(466, 489);
 			this->answer_B->Name = L"answer_B";
 			this->answer_B->Size = System::Drawing::Size(243, 36);
 			this->answer_B->TabIndex = 5;
 			this->answer_B->Text = L"B: answer";
+			this->answer_B->TextAlign = System::Drawing::ContentAlignment::MiddleLeft;
 			this->answer_B->UseVisualStyleBackColor = true;
+			this->answer_B->Click += gcnew System::EventHandler(this, &FA_Millionaire::answer_B_Click);
 			// 
 			// answer_C
 			// 
+			this->answer_C->BackColor = System::Drawing::Color::Transparent;
+			this->answer_C->BackgroundImageLayout = System::Windows::Forms::ImageLayout::None;
+			this->answer_C->FlatAppearance->BorderSize = 0;
+			this->answer_C->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
+			this->answer_C->Font = (gcnew System::Drawing::Font(L"Copperplate Gothic Bold", 14, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->answer_C->ForeColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(255)), static_cast<System::Int32>(static_cast<System::Byte>(128)),
+				static_cast<System::Int32>(static_cast<System::Byte>(0)));
 			this->answer_C->Location = System::Drawing::Point(94, 541);
 			this->answer_C->Name = L"answer_C";
 			this->answer_C->Size = System::Drawing::Size(243, 36);
 			this->answer_C->TabIndex = 5;
 			this->answer_C->Text = L"C: answer";
+			this->answer_C->TextAlign = System::Drawing::ContentAlignment::MiddleLeft;
 			this->answer_C->UseVisualStyleBackColor = true;
+			this->answer_C->Click += gcnew System::EventHandler(this, &FA_Millionaire::answer_C_Click);
 			// 
 			// answer_D
 			// 
+			this->answer_D->BackColor = System::Drawing::Color::Transparent;
+			this->answer_D->BackgroundImageLayout = System::Windows::Forms::ImageLayout::None;
+			this->answer_D->FlatAppearance->BorderSize = 0;
+			this->answer_D->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
+			this->answer_D->Font = (gcnew System::Drawing::Font(L"Copperplate Gothic Bold", 14, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->answer_D->ForeColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(255)), static_cast<System::Int32>(static_cast<System::Byte>(128)),
+				static_cast<System::Int32>(static_cast<System::Byte>(0)));
 			this->answer_D->Location = System::Drawing::Point(466, 541);
 			this->answer_D->Name = L"answer_D";
 			this->answer_D->Size = System::Drawing::Size(243, 36);
 			this->answer_D->TabIndex = 5;
 			this->answer_D->Text = L"D: answer";
+			this->answer_D->TextAlign = System::Drawing::ContentAlignment::MiddleLeft;
 			this->answer_D->UseVisualStyleBackColor = true;
+			this->answer_D->Click += gcnew System::EventHandler(this, &FA_Millionaire::answer_D_Click);
 			// 
 			// fifty_fifty
 			// 
@@ -195,6 +238,7 @@ namespace FAMillionaire {
 			this->fifty_fifty->TabIndex = 6;
 			this->fifty_fifty->Text = L"50:50";
 			this->fifty_fifty->UseVisualStyleBackColor = true;
+			this->fifty_fifty->Click += gcnew System::EventHandler(this, &FA_Millionaire::fifty_fifty_Click);
 			// 
 			// phone
 			// 
@@ -204,6 +248,7 @@ namespace FAMillionaire {
 			this->phone->TabIndex = 6;
 			this->phone->Text = L"phone";
 			this->phone->UseVisualStyleBackColor = true;
+			this->phone->Click += gcnew System::EventHandler(this, &FA_Millionaire::phone_Click);
 			// 
 			// audience
 			// 
@@ -213,13 +258,12 @@ namespace FAMillionaire {
 			this->audience->TabIndex = 6;
 			this->audience->Text = L"audience";
 			this->audience->UseVisualStyleBackColor = true;
+			this->audience->Click += gcnew System::EventHandler(this, &FA_Millionaire::audience_Click);
 			// 
 			// FA_Millionaire
 			// 
 			this->BackColor = System::Drawing::Color::Black;
 			this->ClientSize = System::Drawing::Size(1366, 724);
-			//this->axWindowsMediaPlayer1->Size = System::Drawing::Size(FAMillionaire::FA_Millionaire::GetDesktopResolution(true),
-			//	FAMillionaire::FA_Millionaire::GetDesktopResolution(false));
 			this->Controls->Add(this->axWindowsMediaPlayer1);
 			this->Controls->Add(this->audience);
 			this->Controls->Add(this->phone);
@@ -245,20 +289,35 @@ namespace FAMillionaire {
 
 		}
 #pragma endregion
-	private: System::Void timer_Tick(System::Object^ sender, System::EventArgs^ e) {
+		private: System::Void timer_Tick(System::Object^ sender, System::EventArgs^ e) {
 
-		FAMillionaire::FA_Millionaire::SetTimer(100);
+			FAMillionaire::FA_Millionaire::SetTimer(100);
 
-		if (FAMillionaire::FA_Millionaire::GetTimer() == 500)
-		{
-			axWindowsMediaPlayer1->fullScreen = true;
+			if (FAMillionaire::FA_Millionaire::GetTimer() == 500)
+			{
+				axWindowsMediaPlayer1->fullScreen = true;
+			}
+
+			if (FAMillionaire::FA_Millionaire::GetTimer() == 17000 /*INTRO_TIME*/)
+			{
+				axWindowsMediaPlayer1->close();
+				axWindowsMediaPlayer1->Hide();
+				Questions::Questions::StartGame();
+			}
 		}
-
-		if (FAMillionaire::FA_Millionaire::GetTimer() == 37000 /*INTRO_TIME*/)
-		{
-			/*FAMillionaire::FA_Millionaire::*/axWindowsMediaPlayer1->close();
-			/*FAMillionaire::FA_Millionaire::*/axWindowsMediaPlayer1->Hide();
+		private: System::Void answer_A_Click(System::Object^ sender, System::EventArgs^ e) {
 		}
-	}
-};
+		private: System::Void answer_C_Click(System::Object^ sender, System::EventArgs^ e) {
+		}
+		private: System::Void answer_B_Click(System::Object^ sender, System::EventArgs^ e) {
+		}
+		private: System::Void answer_D_Click(System::Object^ sender, System::EventArgs^ e) {
+		}
+		private: System::Void fifty_fifty_Click(System::Object^ sender, System::EventArgs^ e) {
+		}
+		private: System::Void phone_Click(System::Object^ sender, System::EventArgs^ e) {
+		}
+		private: System::Void audience_Click(System::Object^ sender, System::EventArgs^ e) {
+		}
+	};
 }
