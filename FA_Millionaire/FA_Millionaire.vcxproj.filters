@@ -30,4 +30,104 @@
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="Resources\Images\FA_Millionaire_0000_Logo.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\Images\FA_Millionaire_0000s_0000_Audience A.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\Images\FA_Millionaire_0000s_0001_Audience B.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\Images\FA_Millionaire_0000s_0002_Audience C.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\Images\FA_Millionaire_0000s_0003_Audience D.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\Images\FA_Millionaire_0001_Vitesco Logo.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\Images\FA_Millionaire_0001s_0000_Audience Used.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\Images\FA_Millionaire_0001s_0001_Audience Ready.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\Images\FA_Millionaire_0001s_0002_50_50 Used.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\Images\FA_Millionaire_0001s_0003_50_50 Ready.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\Images\FA_Millionaire_0001s_0004_Phone Used.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\Images\FA_Millionaire_0001s_0005_Phone Ready.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\Images\FA_Millionaire_0002_FA Lab Edition.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\Images\FA_Millionaire_0002s_0000_10000000.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\Images\FA_Millionaire_0002s_0001_5000000.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\Images\FA_Millionaire_0002s_0002_2500000.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\Images\FA_Millionaire_0002s_0003_1250000.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\Images\FA_Millionaire_0002s_0004_640000.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\Images\FA_Millionaire_0002s_0005_320000.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\Images\FA_Millionaire_0002s_0006_160000.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\Images\FA_Millionaire_0002s_0007_80000.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\Images\FA_Millionaire_0002s_0008_40000.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\Images\FA_Millionaire_0002s_0009_20000.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\Images\FA_Millionaire_0002s_0010_10000.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\Images\FA_Millionaire_0002s_0011_5000.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\Images\FA_Millionaire_0002s_0012_3000.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\Images\FA_Millionaire_0002s_0013_2000.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\Images\FA_Millionaire_0002s_0014_1000.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\Images\FA_Millionaire_0003_Answer Background.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\Images\FA_Millionaire_0004_Question Template.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\Images\FA_Millionaire_0005_Background.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="Resources\Video\Intro.mp4">
+      <Filter>Resource Files</Filter>
+    </Media>
+  </ItemGroup>
 </Project>
