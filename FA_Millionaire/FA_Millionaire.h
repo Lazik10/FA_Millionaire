@@ -50,7 +50,9 @@ namespace FAMillionaire {
 		static int GetTimer();
 		static void SetTimer(int diff);
 		static bool GetFiftyFiftyStatus() { return fifty_fifty_used; };
-
+		static bool GetStatusAnswerSelected() { return answer_selected; };
+		static void SetStatusAnswerSelected(bool status) { answer_selected = status; };
+		void SetDefaultState();
 		int GetDesktopResolution(bool horizontal);
 		//void GetDesktopResolution(int& vertical, int& horizontal);
 
@@ -83,6 +85,7 @@ namespace FAMillionaire {
 		static bool fifty_fifty_used = false;
 		static bool audience_used = false;
 		static bool phone_used = false;
+		static bool answer_selected = false;
 
 #pragma region Windows Form Designer generated code
 		/// <summary>
@@ -95,7 +98,6 @@ namespace FAMillionaire {
 			System::ComponentModel::ComponentResourceManager^ resources = (gcnew System::ComponentModel::ComponentResourceManager(FA_Millionaire::typeid));
 			resources_fa_millionaire = resources;
 			this->picturePrizeChart = (gcnew System::Windows::Forms::PictureBox());
-			this->axWindowsMediaPlayer1 = (gcnew AxWMPLib::AxWindowsMediaPlayer());
 			this->background = (gcnew System::Windows::Forms::PictureBox());
 			this->question_template = (gcnew System::Windows::Forms::PictureBox());
 			this->question = (gcnew System::Windows::Forms::Label());
@@ -113,7 +115,6 @@ namespace FAMillionaire {
 			this->button1 = (gcnew System::Windows::Forms::Button());
 			this->audience_resoults = (gcnew System::Windows::Forms::PictureBox());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->picturePrizeChart))->BeginInit();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->axWindowsMediaPlayer1))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->background))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->question_template))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->vitesco_logo))->BeginInit();
@@ -130,15 +131,6 @@ namespace FAMillionaire {
 			this->picturePrizeChart->Size = System::Drawing::Size(694, 1080);
 			this->picturePrizeChart->TabIndex = 1;
 			this->picturePrizeChart->TabStop = false;
-			// 
-			// axWindowsMediaPlayer1
-			// 
-			this->axWindowsMediaPlayer1->Enabled = true;
-			this->axWindowsMediaPlayer1->Location = System::Drawing::Point(0, -1);
-			this->axWindowsMediaPlayer1->Name = L"axWindowsMediaPlayer1";
-			this->axWindowsMediaPlayer1->OcxState = (cli::safe_cast<System::Windows::Forms::AxHost::State^>(resources->GetObject(L"axWindowsMediaPlayer1.OcxState")));
-			this->axWindowsMediaPlayer1->Size = System::Drawing::Size(0, 0);
-			this->axWindowsMediaPlayer1->TabIndex = 0;
 			// 
 			// background
 			// 
@@ -174,7 +166,7 @@ namespace FAMillionaire {
 			this->question->Name = L"question";
 			this->question->Size = System::Drawing::Size(1024, 108);
 			this->question->TabIndex = 4;
-			this->question->Text = L"Question";
+			this->question->Text = L"";
 			this->question->TextAlign = System::Drawing::ContentAlignment::MiddleCenter;
 			// 
 			// timer
@@ -186,12 +178,12 @@ namespace FAMillionaire {
 			// 
 			this->answer_A->BackColor = System::Drawing::Color::Transparent;
 			this->answer_A->BackgroundImage = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"answer_A.BackgroundImage")));
-			this->answer_A->BackgroundImageLayout = System::Windows::Forms::ImageLayout::None;
+			this->answer_A->BackgroundImageLayout = System::Windows::Forms::ImageLayout::Stretch;
 			this->answer_A->FlatAppearance->BorderColor = System::Drawing::Color::Black;
 			this->answer_A->FlatAppearance->BorderSize = 0;
-			this->answer_A->FlatAppearance->CheckedBackColor = System::Drawing::Color::Black;
-			this->answer_A->FlatAppearance->MouseDownBackColor = System::Drawing::Color::Black;
-			this->answer_A->FlatAppearance->MouseOverBackColor = System::Drawing::Color::Black;
+			this->answer_A->FlatAppearance->CheckedBackColor = System::Drawing::Color::Transparent;
+			this->answer_A->FlatAppearance->MouseDownBackColor = System::Drawing::Color::Transparent;
+			this->answer_A->FlatAppearance->MouseOverBackColor = System::Drawing::Color::Transparent;
 			this->answer_A->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
 			this->answer_A->Font = (gcnew System::Drawing::Font(L"Copperplate Gothic Bold", 24, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
@@ -200,7 +192,7 @@ namespace FAMillionaire {
 			this->answer_A->Name = L"answer_A";
 			this->answer_A->Size = System::Drawing::Size(356, 53);
 			this->answer_A->TabIndex = 5;
-			this->answer_A->Text = L"answer";
+			this->answer_A->Text = L" ";
 			this->answer_A->TextAlign = System::Drawing::ContentAlignment::MiddleLeft;
 			this->answer_A->UseVisualStyleBackColor = false;
 			this->answer_A->Click += gcnew System::EventHandler(this, &FA_Millionaire::answer_A_Click);
@@ -209,12 +201,12 @@ namespace FAMillionaire {
 			// 
 			this->answer_B->BackColor = System::Drawing::Color::Transparent;
 			this->answer_B->BackgroundImage = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"answer_B.BackgroundImage")));
-			this->answer_B->BackgroundImageLayout = System::Windows::Forms::ImageLayout::None;
+			this->answer_B->BackgroundImageLayout = System::Windows::Forms::ImageLayout::Stretch;
 			this->answer_B->FlatAppearance->BorderColor = System::Drawing::Color::Black;
 			this->answer_B->FlatAppearance->BorderSize = 0;
-			this->answer_B->FlatAppearance->CheckedBackColor = System::Drawing::Color::Black;
-			this->answer_B->FlatAppearance->MouseDownBackColor = System::Drawing::Color::Black;
-			this->answer_B->FlatAppearance->MouseOverBackColor = System::Drawing::Color::Black;
+			this->answer_B->FlatAppearance->CheckedBackColor = System::Drawing::Color::Transparent;
+			this->answer_B->FlatAppearance->MouseDownBackColor = System::Drawing::Color::Transparent;
+			this->answer_B->FlatAppearance->MouseOverBackColor = System::Drawing::Color::Transparent;
 			this->answer_B->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
 			this->answer_B->Font = (gcnew System::Drawing::Font(L"Copperplate Gothic Bold", 24, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
@@ -223,7 +215,7 @@ namespace FAMillionaire {
 			this->answer_B->Name = L"answer_B";
 			this->answer_B->Size = System::Drawing::Size(356, 53);
 			this->answer_B->TabIndex = 5;
-			this->answer_B->Text = L"answer";
+			this->answer_B->Text = L"";
 			this->answer_B->TextAlign = System::Drawing::ContentAlignment::MiddleLeft;
 			this->answer_B->UseVisualStyleBackColor = true;
 			this->answer_B->Click += gcnew System::EventHandler(this, &FA_Millionaire::answer_B_Click);
@@ -232,12 +224,12 @@ namespace FAMillionaire {
 			// 
 			this->answer_C->BackColor = System::Drawing::Color::Transparent;
 			this->answer_C->BackgroundImage = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"answer_C.BackgroundImage")));
-			this->answer_C->BackgroundImageLayout = System::Windows::Forms::ImageLayout::None;
+			this->answer_C->BackgroundImageLayout = System::Windows::Forms::ImageLayout::Stretch;
 			this->answer_C->FlatAppearance->BorderColor = System::Drawing::Color::Black;
 			this->answer_C->FlatAppearance->BorderSize = 0;
-			this->answer_C->FlatAppearance->CheckedBackColor = System::Drawing::Color::Black;
-			this->answer_C->FlatAppearance->MouseDownBackColor = System::Drawing::Color::Black;
-			this->answer_C->FlatAppearance->MouseOverBackColor = System::Drawing::Color::Black;
+			this->answer_C->FlatAppearance->CheckedBackColor = System::Drawing::Color::Transparent;
+			this->answer_C->FlatAppearance->MouseDownBackColor = System::Drawing::Color::Transparent;
+			this->answer_C->FlatAppearance->MouseOverBackColor = System::Drawing::Color::Transparent;
 			this->answer_C->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
 			this->answer_C->Font = (gcnew System::Drawing::Font(L"Copperplate Gothic Bold", 24, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
@@ -246,7 +238,7 @@ namespace FAMillionaire {
 			this->answer_C->Name = L"answer_C";
 			this->answer_C->Size = System::Drawing::Size(356, 53);
 			this->answer_C->TabIndex = 5;
-			this->answer_C->Text = L"answer";
+			this->answer_C->Text = L"";
 			this->answer_C->TextAlign = System::Drawing::ContentAlignment::MiddleLeft;
 			this->answer_C->UseVisualStyleBackColor = true;
 			this->answer_C->Click += gcnew System::EventHandler(this, &FA_Millionaire::answer_C_Click);
@@ -255,12 +247,12 @@ namespace FAMillionaire {
 			// 
 			this->answer_D->BackColor = System::Drawing::Color::Transparent;
 			this->answer_D->BackgroundImage = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"answer_D.BackgroundImage")));
-			this->answer_D->BackgroundImageLayout = System::Windows::Forms::ImageLayout::None;
+			this->answer_D->BackgroundImageLayout = System::Windows::Forms::ImageLayout::Stretch;
 			this->answer_D->FlatAppearance->BorderColor = System::Drawing::Color::Black;
 			this->answer_D->FlatAppearance->BorderSize = 0;
-			this->answer_D->FlatAppearance->CheckedBackColor = System::Drawing::Color::Black;
-			this->answer_D->FlatAppearance->MouseDownBackColor = System::Drawing::Color::Black;
-			this->answer_D->FlatAppearance->MouseOverBackColor = System::Drawing::Color::Black;
+			this->answer_D->FlatAppearance->CheckedBackColor = System::Drawing::Color::Transparent;
+			this->answer_D->FlatAppearance->MouseDownBackColor = System::Drawing::Color::Transparent;
+			this->answer_D->FlatAppearance->MouseOverBackColor = System::Drawing::Color::Transparent;
 			this->answer_D->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
 			this->answer_D->Font = (gcnew System::Drawing::Font(L"Copperplate Gothic Bold", 24, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
@@ -269,7 +261,7 @@ namespace FAMillionaire {
 			this->answer_D->Name = L"answer_D";
 			this->answer_D->Size = System::Drawing::Size(355, 53);
 			this->answer_D->TabIndex = 5;
-			this->answer_D->Text = L"answer";
+			this->answer_D->Text = L"";
 			this->answer_D->TextAlign = System::Drawing::ContentAlignment::MiddleLeft;
 			this->answer_D->UseVisualStyleBackColor = true;
 			this->answer_D->Click += gcnew System::EventHandler(this, &FA_Millionaire::answer_D_Click);
@@ -369,7 +361,6 @@ namespace FAMillionaire {
 			this->Controls->Add(this->button1);
 			this->Controls->Add(this->new_game);
 			this->Controls->Add(this->fa_edition_logo);
-			this->Controls->Add(this->axWindowsMediaPlayer1);
 			this->Controls->Add(this->audience);
 			this->Controls->Add(this->phone);
 			this->Controls->Add(this->fifty_fifty);
@@ -388,7 +379,6 @@ namespace FAMillionaire {
 			this->Text = L"FA_Millionaire";
 			this->WindowState = System::Windows::Forms::FormWindowState::Maximized;
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->picturePrizeChart))->EndInit();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->axWindowsMediaPlayer1))->EndInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->background))->EndInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->question_template))->EndInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->vitesco_logo))->EndInit();
@@ -416,42 +406,94 @@ namespace FAMillionaire {
 		}
 		private: System::Void answer_A_Click(System::Object^ sender, System::EventArgs^ e) 
 		{
-			Questions::Questions::EvaluateAnswer(answer_A->Text);
+			if (!answer_selected)
+			{
+				answer_A->BackColor = System::Drawing::Color::Orange;
+				answer_A->FlatAppearance->MouseOverBackColor = System::Drawing::Color::Orange;
+
+				if (Questions::Questions::EvaluateAnswer(answer_A->Text))
+				{
+					answer_A->BackColor = System::Drawing::Color::Green;
+					answer_A->FlatAppearance->MouseOverBackColor = System::Drawing::Color::Green;
+				}
+
+				answer_A->BackgroundImage = nullptr;
+				answer_selected = true;
+			}
 		}
 		private: System::Void answer_B_Click(System::Object^ sender, System::EventArgs^ e) 
 		{
-			Questions::Questions::EvaluateAnswer(answer_B->Text);
+			if (!answer_selected)
+			{
+				answer_B->BackColor = System::Drawing::Color::Orange;
+				answer_B->FlatAppearance->MouseOverBackColor = System::Drawing::Color::Orange;
+
+				if (Questions::Questions::EvaluateAnswer(answer_B->Text))
+				{
+					answer_B->BackColor = System::Drawing::Color::Green;
+					answer_B->FlatAppearance->MouseOverBackColor = System::Drawing::Color::Green;
+				}
+
+				answer_B->BackgroundImage = nullptr;
+				answer_selected = true;
+			}
 		}
 		private: System::Void answer_C_Click(System::Object^ sender, System::EventArgs^ e) 
 		{
-			Questions::Questions::EvaluateAnswer(answer_C->Text);
+			if (!answer_selected)
+			{
+				answer_C->BackColor = System::Drawing::Color::Orange;
+				answer_C->FlatAppearance->MouseOverBackColor = System::Drawing::Color::Orange;
+
+				if (Questions::Questions::EvaluateAnswer(answer_C->Text))
+				{
+					answer_C->BackColor = System::Drawing::Color::Green;
+					answer_C->FlatAppearance->MouseOverBackColor = System::Drawing::Color::Green;
+				}
+
+				answer_C->BackgroundImage = nullptr;
+				answer_selected = true;
+			}
 		}
 		private: System::Void answer_D_Click(System::Object^ sender, System::EventArgs^ e) 
 		{
-			Questions::Questions::EvaluateAnswer(answer_D->Text);
+			if (!answer_selected)
+			{
+				answer_D->BackColor = System::Drawing::Color::Orange;
+				answer_D->FlatAppearance->MouseOverBackColor = System::Drawing::Color::Orange;
+
+				if (Questions::Questions::EvaluateAnswer(answer_D->Text))
+				{
+					answer_D->BackColor = System::Drawing::Color::Green;
+					answer_D->FlatAppearance->MouseOverBackColor = System::Drawing::Color::Green;
+				}
+
+				answer_D->BackgroundImage = nullptr;
+				answer_selected = true;
+			}
 		}
 		private: System::Void fifty_fifty_Click(System::Object^ sender, System::EventArgs^ e) 
 		{
-			if (!fifty_fifty_used)
+			if (!fifty_fifty_used && !answer_selected)
 			{
-				this->fifty_fifty->BackgroundImage = (cli::safe_cast<System::Drawing::Image^>(resources_fa_millionaire->GetObject(L"FA_Millionaire_0001s_0002_50_50 Used")));
+				//this->fifty_fifty->BackgroundImage = (cli::safe_cast<System::Drawing::Image^>(resources_fa_millionaire->GetObject(L"FA_Millionaire_0001s_0002_50_50 Used")));
 				Questions::Questions::FiftyFifty();
 				fifty_fifty_used = true;
 			}
 		}
 		private: System::Void phone_Click(System::Object^ sender, System::EventArgs^ e) 
 		{
-			if (!phone_used)
+			if (!phone_used && !answer_selected)
 			{
-				phone->BackgroundImage = (cli::safe_cast<System::Drawing::Image^>(resources_fa_millionaire->GetObject(L"FA_Millionaire_0001s_0004_Phone Used")));
+				//phone->BackgroundImage = (cli::safe_cast<System::Drawing::Image^>(resources_fa_millionaire->GetObject(L"FA_Millionaire_0001s_0004_Phone Used")));
 				phone_used = true;
 			}
 		}
 		private: System::Void audience_Click(System::Object^ sender, System::EventArgs^ e) 
 		{
-			if (!audience_used)
+			if (!audience_used && !answer_selected)
 			{
-				audience->BackgroundImage = (cli::safe_cast<System::Drawing::Image^>(resources_fa_millionaire->GetObject(L"FA_Millionaire_0001s_0000_Audience Used")));
+				//audience->BackgroundImage = (cli::safe_cast<System::Drawing::Image^>(resources_fa_millionaire->GetObject(L"FA_Millionaire_0001s_0000_Audience Used")));
 				audience_used = true;
 
 				audience_resoults->Image = (cli::safe_cast<System::Drawing::Image^>(resources_fa_millionaire->GetObject(Questions::Questions::GetAudienceHelp())));
@@ -461,15 +503,7 @@ namespace FAMillionaire {
 		private: System::Void new_game_Click(System::Object^ sender, System::EventArgs^ e) 
 		{
 			Questions::Questions::StartNewGame();
-
-			round = 0;
-			audience_used = false;
-			audience->BackgroundImage = (cli::safe_cast<System::Drawing::Image^>(resources_fa_millionaire->GetObject(L"audience.BackgroundImage")));
-			phone_used = false;
-			phone->BackgroundImage = (cli::safe_cast<System::Drawing::Image^>(resources_fa_millionaire->GetObject(L"phone.BackgroundImage")));
-			fifty_fifty_used = false;
-			fifty_fifty->BackgroundImage = (cli::safe_cast<System::Drawing::Image^>(resources_fa_millionaire->GetObject(L"fifty_fifty.BackgroundImage")));
-			audience_resoults->Visible = false;
+			SetDefaultState();
 		}
 	};
 }

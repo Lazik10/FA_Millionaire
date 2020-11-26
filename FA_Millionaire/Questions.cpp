@@ -146,14 +146,46 @@ namespace Questions
     void Questions::StartNewGame()
     {
         SelectQuestion();
+        FAMillionaire::FA_Millionaire::SetStatusAnswerSelected(false);
     }
 
     bool Questions::EvaluateAnswer(System::String^ answer)
     {
         if (answer == ConvertToSystemString(correct_answer))
+        {
+            int round = FAMillionaire::FA_Millionaire::GetRound();
+            FAMillionaire::FA_Millionaire::SetRound(round++);
+            FAMillionaire::FA_Millionaire::SetStatusAnswerSelected(false);
             return true;
+        }
         else
+        {
+            if (FAMillionaire::FA_Millionaire::answer_A->Text == ConvertToSystemString(correct_answer))
+            {
+                FAMillionaire::FA_Millionaire::answer_A->BackColor = System::Drawing::Color::Green;
+                FAMillionaire::FA_Millionaire::answer_A->FlatAppearance->MouseOverBackColor = System::Drawing::Color::Green;
+                FAMillionaire::FA_Millionaire::answer_A->BackgroundImage = nullptr;
+            }
+            else if (FAMillionaire::FA_Millionaire::answer_B->Text == ConvertToSystemString(correct_answer))
+            {
+                FAMillionaire::FA_Millionaire::answer_B->BackColor = System::Drawing::Color::Green;
+                FAMillionaire::FA_Millionaire::answer_B->FlatAppearance->MouseOverBackColor = System::Drawing::Color::Green;
+                FAMillionaire::FA_Millionaire::answer_B->BackgroundImage = nullptr;
+            }
+            else if (FAMillionaire::FA_Millionaire::answer_C->Text == ConvertToSystemString(correct_answer))
+            {
+                FAMillionaire::FA_Millionaire::answer_C->BackColor = System::Drawing::Color::Green;
+                FAMillionaire::FA_Millionaire::answer_C->FlatAppearance->MouseOverBackColor = System::Drawing::Color::Green;
+                FAMillionaire::FA_Millionaire::answer_C->BackgroundImage = nullptr;
+            }
+            else if (FAMillionaire::FA_Millionaire::answer_D->Text == ConvertToSystemString(correct_answer))
+            {
+                FAMillionaire::FA_Millionaire::answer_D->BackColor = System::Drawing::Color::Green;
+                FAMillionaire::FA_Millionaire::answer_D->FlatAppearance->MouseOverBackColor = System::Drawing::Color::Green;
+                FAMillionaire::FA_Millionaire::answer_D->BackgroundImage = nullptr;
+            }
             return false;
+        }
     }
 
     void Questions::FiftyFifty()

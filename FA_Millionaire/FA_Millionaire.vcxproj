@@ -174,7 +174,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="fifty_fifty_used.bmp" />
     <Image Include="Resources\Images\FA_Millionaire_0000s_0000_Audience A.jpg">
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>

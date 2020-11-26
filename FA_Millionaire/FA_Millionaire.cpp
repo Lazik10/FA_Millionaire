@@ -35,6 +35,28 @@ void FAMillionaire::FA_Millionaire::SetTimer(int diff)
     run_time += diff;
 }
 
+void FAMillionaire::FA_Millionaire::SetDefaultState()
+{
+    round = 0;
+    audience_used = false;
+    audience->BackgroundImage = (cli::safe_cast<System::Drawing::Image^>(resources_fa_millionaire->GetObject(L"audience.BackgroundImage")));
+    phone_used = false;
+    phone->BackgroundImage = (cli::safe_cast<System::Drawing::Image^>(resources_fa_millionaire->GetObject(L"phone.BackgroundImage")));
+    fifty_fifty_used = false;
+    fifty_fifty->BackgroundImage = (cli::safe_cast<System::Drawing::Image^>(resources_fa_millionaire->GetObject(L"fifty_fifty.BackgroundImage")));
+    audience_resoults->Visible = false;
+
+    answer_A->BackColor = System::Drawing::Color::Transparent;
+    answer_B->BackColor = System::Drawing::Color::Transparent;
+    answer_C->BackColor = System::Drawing::Color::Transparent;
+    answer_D->BackColor = System::Drawing::Color::Transparent;
+
+    answer_A->FlatAppearance->MouseOverBackColor = System::Drawing::Color::Transparent;
+    answer_B->FlatAppearance->MouseOverBackColor = System::Drawing::Color::Transparent;
+    answer_C->FlatAppearance->MouseOverBackColor = System::Drawing::Color::Transparent;
+    answer_D->FlatAppearance->MouseOverBackColor = System::Drawing::Color::Transparent;
+}
+
 //void GetDesktopResolution(int& horizontal, int& vertical)
 int FAMillionaire::FA_Millionaire::GetDesktopResolution(bool horizontal)
 {

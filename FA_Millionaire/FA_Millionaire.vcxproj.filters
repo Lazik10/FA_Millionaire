@@ -124,9 +124,6 @@
     <Image Include="Resources\Images\FA_Millionaire_0005_Background.jpg">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="fifty_fifty_used.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
     <Image Include="Resources\Images\FA_Millionaire_0004_Question Background.jpg">
       <Filter>Resource Files</Filter>
     </Image>
