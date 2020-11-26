@@ -15,6 +15,16 @@ void Main(array<String^>^ args) {
     Application::Run(% form);
 }
 
+int FAMillionaire::FA_Millionaire::GetRound()
+{
+    return round;
+}
+
+void FAMillionaire::FA_Millionaire::SetRound(int question_round)
+{
+    round = question_round;
+}
+
 int FAMillionaire::FA_Millionaire::GetTimer()
 {
     return FA_Millionaire::run_time;

@@ -3,12 +3,26 @@
 #include <vector>
 #include <string>
 #include <string.h>
+#include <cstdlib>
 #include "questions.h"
 #include "FA_Millionaire.h"
 
 namespace Questions
 {
     const int MAX_QUESTIONS = 16;
+    int Questions::correct_answer_pos = 0;
+    std::string Questions::correct_answer = "";
+    int Questions::fifty_fifty_erased_answers[2] = { 0, 0 };
+
+    enum Answer
+    {
+        ANSWER_A,
+        ANSWER_B,
+        ANSWER_C,
+        ANSWER_D,
+        WRONG,
+        CORRECT,
+    };
 
     struct Question
     {
@@ -17,7 +31,7 @@ namespace Questions
         std::string answer_b;
         std::string answer_c;
         std::string asnwer_d;
-        std::string correct_answer;
+        std::string question_correct_answer;
     };    
 
     Question questions[MAX_QUESTIONS]
@@ -70,7 +84,7 @@ namespace Questions
         std::string answerC;
         std::string answerD;
 
-        unsigned int random_number = 0;
+        int random_number = 0;
         srand(time(NULL));
         random_number = rand() % 1 /*MAX_QUESTIONS*/;
 
@@ -80,23 +94,24 @@ namespace Questions
         answers.push_back(questions[0].answer_b);
         answers.push_back(questions[0].answer_c);
         answers.push_back(questions[0].asnwer_d);
+        correct_answer = questions[0].question_correct_answer;
 
         for (int i = 0; i < 4; i++)
         {
             int random_answer_number = rand() % answers.size();
             switch (i)
             {
-            case 0:
-                answerA = "A: " + answers[random_answer_number];
+            case ANSWER_A:
+                answerA = answers[random_answer_number];
                 break;
-            case 1:
-                answerB = "B: " + answers[random_answer_number];
+            case ANSWER_B:
+                answerB = answers[random_answer_number];
                 break;
-            case 2:
-                answerC = "C: " + answers[random_answer_number];
+            case ANSWER_C:
+                answerC = answers[random_answer_number];
                 break;
-            case 3:
-                answerD = "D: " + answers[random_answer_number];
+            case ANSWER_D:
+                answerD = answers[random_answer_number];
                 break;
             default:
                 break;
@@ -104,6 +119,15 @@ namespace Questions
 
             answers.erase(answers.begin() + random_answer_number);
         }
+
+        if (answerA == questions->question_correct_answer)
+            correct_answer_pos = ANSWER_A;
+        else if (answerB == questions->question_correct_answer)
+            correct_answer_pos = ANSWER_B;
+        else if (answerC == questions->question_correct_answer)
+            correct_answer_pos = ANSWER_C;
+        else if (answerD == questions->question_correct_answer)
+            correct_answer_pos = ANSWER_D;
 
         FAMillionaire::FA_Millionaire::question->Text = ConvertToSystemString(questions[0].question);
         FAMillionaire::FA_Millionaire::answer_A->Text = ConvertToSystemString(answerA);
@@ -119,8 +143,120 @@ namespace Questions
         return newSystemString;
     }
 
-    void Questions::StartGame()
+    void Questions::StartNewGame()
     {
         SelectQuestion();
+    }
+
+    bool Questions::EvaluateAnswer(System::String^ answer)
+    {
+        if (answer == ConvertToSystemString(correct_answer))
+            return true;
+        else
+            return false;
+    }
+
+    void Questions::FiftyFifty()
+    {
+        std::vector<int> answers;
+
+        if (FAMillionaire::FA_Millionaire::answer_A->Text != ConvertToSystemString(correct_answer))
+            answers.push_back(ANSWER_A);
+        if (FAMillionaire::FA_Millionaire::answer_B->Text != ConvertToSystemString(correct_answer))
+            answers.push_back(ANSWER_B);
+        if (FAMillionaire::FA_Millionaire::answer_C->Text != ConvertToSystemString(correct_answer))
+            answers.push_back(ANSWER_C);
+        if (FAMillionaire::FA_Millionaire::answer_D->Text != ConvertToSystemString(correct_answer))
+            answers.push_back(ANSWER_D);
+
+        int rand_pos = (rand() % answers.size());
+
+        answers.erase(answers.begin() + rand_pos);
+        int vector_pos = 0;
+        
+        for (auto itr = answers.begin(); itr != answers.end(); itr++)
+        {
+            fifty_fifty_erased_answers[vector_pos] = answers[vector_pos];
+            switch (answers[vector_pos])
+            {
+            case 0:
+                FAMillionaire::FA_Millionaire::answer_A->Text = "";
+                break;
+            case 1:
+                FAMillionaire::FA_Millionaire::answer_B->Text = "";
+                break;
+            case 2:
+                FAMillionaire::FA_Millionaire::answer_C->Text = "";
+                break;
+            case 3:
+                FAMillionaire::FA_Millionaire::answer_D->Text = "";
+                break;
+            default:
+                break;
+            };
+
+            vector_pos++;
+        }
+    }
+
+    System::String^ Questions::GetAudienceHelp()
+    {
+        System::String^ audience_answer = "";
+        unsigned short int audience_help = correct_answer_pos;
+
+        // Remove correct answer
+        std::vector<unsigned short int> wrong_answer_options{ ANSWER_A, ANSWER_B, ANSWER_C, ANSWER_D };
+        wrong_answer_options.erase(wrong_answer_options.begin() + correct_answer_pos);
+        unsigned int wrong_answer_options_size = wrong_answer_options.size();
+
+        if (FAMillionaire::FA_Millionaire::GetFiftyFiftyStatus())
+        {
+            for (unsigned int i = 0; i < wrong_answer_options_size; i++ )
+            {
+                if (wrong_answer_options[i] == fifty_fifty_erased_answers[0] ||
+                    wrong_answer_options[i] == fifty_fifty_erased_answers[1])
+                {
+                    wrong_answer_options.erase(wrong_answer_options.begin() + i);
+                    wrong_answer_options_size--;
+                }
+            }
+        }
+
+        if (FAMillionaire::FA_Millionaire::GetRound() > 4 && FAMillionaire::FA_Millionaire::GetRound() < 10)
+        {
+            // 5% to make the audiance be wrong
+            if ((rand() % 100) < 5)
+            {
+                audience_help = wrong_answer_options[(rand() % wrong_answer_options.size())];
+            }
+        }
+        else if (FAMillionaire::FA_Millionaire::GetRound() >= 10)
+        {
+            // 30% to make the audiance be wrong
+            if ((rand() % 100) < 30)
+            {
+                audience_help = wrong_answer_options[(rand() % wrong_answer_options.size())];
+            }
+        }
+
+        switch (audience_help)
+        {
+        case ANSWER_A:
+            audience_answer = "FA_Millionaire_0000s_0000_Audience A";
+            break;
+        case ANSWER_B:
+            audience_answer = "FA_Millionaire_0000s_0001_Audience B";
+            break;
+        case ANSWER_C:
+            audience_answer = "FA_Millionaire_0000s_0002_Audience C";
+            break;
+        case ANSWER_D:
+            audience_answer = "FA_Millionaire_0000s_0003_Audience D";
+            break;
+        default:
+            break;
+        }
+
+        return audience_answer;
     }
 };

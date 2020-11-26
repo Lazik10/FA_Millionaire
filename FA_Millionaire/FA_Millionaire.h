@@ -25,6 +25,8 @@ namespace FAMillionaire {
 			//TODO: Add the constructor code here
 			//
 		}
+
+	System::ComponentModel::ComponentResourceManager^ resources_fa_millionaire;
 	public: static System::Windows::Forms::Button^ answer_A;
 	public: static System::Windows::Forms::Button^ answer_B;
 	public: static System::Windows::Forms::Button^ answer_C;
@@ -36,12 +38,19 @@ namespace FAMillionaire {
 	private: System::Windows::Forms::Button^ audience;
 	private: System::Windows::Forms::PictureBox^ vitesco_logo;
 	private: System::Windows::Forms::PictureBox^ fa_edition_logo;
+	private: System::Windows::Forms::Button^ new_game;
+	private: System::Windows::Forms::Button^ button1;
+	private: System::Windows::Forms::PictureBox^ audience_resoults;
 
 	public: AxWMPLib::AxWindowsMediaPlayer^ axWindowsMediaPlayer1;
 	public:
 
+		static int GetRound();
+		static void SetRound(int round);
 		static int GetTimer();
 		static void SetTimer(int diff);
+		static bool GetFiftyFiftyStatus() { return fifty_fifty_used; };
+
 		int GetDesktopResolution(bool horizontal);
 		//void GetDesktopResolution(int& vertical, int& horizontal);
 
@@ -70,6 +79,10 @@ namespace FAMillionaire {
 		/// Required designer variable.
 		/// </summary>
 		static int run_time = 0;
+		static int round = 0;
+		static bool fifty_fifty_used = false;
+		static bool audience_used = false;
+		static bool phone_used = false;
 
 #pragma region Windows Form Designer generated code
 		/// <summary>
@@ -80,6 +93,7 @@ namespace FAMillionaire {
 		{
 			this->components = (gcnew System::ComponentModel::Container());
 			System::ComponentModel::ComponentResourceManager^ resources = (gcnew System::ComponentModel::ComponentResourceManager(FA_Millionaire::typeid));
+			resources_fa_millionaire = resources;
 			this->picturePrizeChart = (gcnew System::Windows::Forms::PictureBox());
 			this->axWindowsMediaPlayer1 = (gcnew AxWMPLib::AxWindowsMediaPlayer());
 			this->background = (gcnew System::Windows::Forms::PictureBox());
@@ -95,12 +109,16 @@ namespace FAMillionaire {
 			this->audience = (gcnew System::Windows::Forms::Button());
 			this->vitesco_logo = (gcnew System::Windows::Forms::PictureBox());
 			this->fa_edition_logo = (gcnew System::Windows::Forms::PictureBox());
+			this->new_game = (gcnew System::Windows::Forms::Button());
+			this->button1 = (gcnew System::Windows::Forms::Button());
+			this->audience_resoults = (gcnew System::Windows::Forms::PictureBox());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->picturePrizeChart))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->axWindowsMediaPlayer1))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->background))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->question_template))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->vitesco_logo))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->fa_edition_logo))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->audience_resoults))->BeginInit();
 			this->SuspendLayout();
 			// 
 			// picturePrizeChart
@@ -128,7 +146,7 @@ namespace FAMillionaire {
 			this->background->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"background.Image")));
 			this->background->Location = System::Drawing::Point(-1, 35);
 			this->background->Name = L"background";
-			this->background->Size = System::Drawing::Size(1234, 612);
+			this->background->Size = System::Drawing::Size(1234, 617);
 			this->background->SizeMode = System::Windows::Forms::PictureBoxSizeMode::StretchImage;
 			this->background->TabIndex = 2;
 			this->background->TabStop = false;
@@ -136,23 +154,25 @@ namespace FAMillionaire {
 			// question_template
 			// 
 			this->question_template->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"question_template.Image")));
-			this->question_template->Location = System::Drawing::Point(-1, 701);
+			this->question_template->Location = System::Drawing::Point(-1, 642);
 			this->question_template->Name = L"question_template";
-			this->question_template->Size = System::Drawing::Size(1234, 330);
+			this->question_template->Size = System::Drawing::Size(1234, 372);
 			this->question_template->SizeMode = System::Windows::Forms::PictureBoxSizeMode::StretchImage;
 			this->question_template->TabIndex = 3;
 			this->question_template->TabStop = false;
 			// 
 			// question
 			// 
+			this->question->AutoEllipsis = true;
 			this->question->BackColor = System::Drawing::Color::Transparent;
 			this->question->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
-			this->question->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 14, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->question->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 24, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
 			this->question->ForeColor = System::Drawing::Color::Silver;
-			this->question->Location = System::Drawing::Point(88, 691);
+			this->question->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"question.Image")));
+			this->question->Location = System::Drawing::Point(93, 686);
 			this->question->Name = L"question";
-			this->question->Size = System::Drawing::Size(1035, 110);
+			this->question->Size = System::Drawing::Size(1024, 108);
 			this->question->TabIndex = 4;
 			this->question->Text = L"Question";
 			this->question->TextAlign = System::Drawing::ContentAlignment::MiddleCenter;
@@ -173,12 +193,12 @@ namespace FAMillionaire {
 			this->answer_A->FlatAppearance->MouseDownBackColor = System::Drawing::Color::Black;
 			this->answer_A->FlatAppearance->MouseOverBackColor = System::Drawing::Color::Black;
 			this->answer_A->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
-			this->answer_A->Font = (gcnew System::Drawing::Font(L"Copperplate Gothic Bold", 14, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->answer_A->Font = (gcnew System::Drawing::Font(L"Copperplate Gothic Bold", 24, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
 			this->answer_A->ForeColor = System::Drawing::Color::Silver;
-			this->answer_A->Location = System::Drawing::Point(144, 863);
+			this->answer_A->Location = System::Drawing::Point(141, 854);
 			this->answer_A->Name = L"answer_A";
-			this->answer_A->Size = System::Drawing::Size(356, 47);
+			this->answer_A->Size = System::Drawing::Size(356, 53);
 			this->answer_A->TabIndex = 5;
 			this->answer_A->Text = L"answer";
 			this->answer_A->TextAlign = System::Drawing::ContentAlignment::MiddleLeft;
@@ -196,12 +216,12 @@ namespace FAMillionaire {
 			this->answer_B->FlatAppearance->MouseDownBackColor = System::Drawing::Color::Black;
 			this->answer_B->FlatAppearance->MouseOverBackColor = System::Drawing::Color::Black;
 			this->answer_B->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
-			this->answer_B->Font = (gcnew System::Drawing::Font(L"Copperplate Gothic Bold", 14, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->answer_B->Font = (gcnew System::Drawing::Font(L"Copperplate Gothic Bold", 24, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
 			this->answer_B->ForeColor = System::Drawing::Color::Silver;
-			this->answer_B->Location = System::Drawing::Point(790, 863);
+			this->answer_B->Location = System::Drawing::Point(784, 854);
 			this->answer_B->Name = L"answer_B";
-			this->answer_B->Size = System::Drawing::Size(355, 47);
+			this->answer_B->Size = System::Drawing::Size(356, 53);
 			this->answer_B->TabIndex = 5;
 			this->answer_B->Text = L"answer";
 			this->answer_B->TextAlign = System::Drawing::ContentAlignment::MiddleLeft;
@@ -219,12 +239,12 @@ namespace FAMillionaire {
 			this->answer_C->FlatAppearance->MouseDownBackColor = System::Drawing::Color::Black;
 			this->answer_C->FlatAppearance->MouseOverBackColor = System::Drawing::Color::Black;
 			this->answer_C->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
-			this->answer_C->Font = (gcnew System::Drawing::Font(L"Copperplate Gothic Bold", 14, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->answer_C->Font = (gcnew System::Drawing::Font(L"Copperplate Gothic Bold", 24, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
 			this->answer_C->ForeColor = System::Drawing::Color::Silver;
-			this->answer_C->Location = System::Drawing::Point(144, 941);
+			this->answer_C->Location = System::Drawing::Point(141, 938);
 			this->answer_C->Name = L"answer_C";
-			this->answer_C->Size = System::Drawing::Size(356, 49);
+			this->answer_C->Size = System::Drawing::Size(356, 53);
 			this->answer_C->TabIndex = 5;
 			this->answer_C->Text = L"answer";
 			this->answer_C->TextAlign = System::Drawing::ContentAlignment::MiddleLeft;
@@ -242,12 +262,12 @@ namespace FAMillionaire {
 			this->answer_D->FlatAppearance->MouseDownBackColor = System::Drawing::Color::Black;
 			this->answer_D->FlatAppearance->MouseOverBackColor = System::Drawing::Color::Black;
 			this->answer_D->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
-			this->answer_D->Font = (gcnew System::Drawing::Font(L"Copperplate Gothic Bold", 14, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->answer_D->Font = (gcnew System::Drawing::Font(L"Copperplate Gothic Bold", 24, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
 			this->answer_D->ForeColor = System::Drawing::Color::Silver;
-			this->answer_D->Location = System::Drawing::Point(790, 941);
+			this->answer_D->Location = System::Drawing::Point(784, 939);
 			this->answer_D->Name = L"answer_D";
-			this->answer_D->Size = System::Drawing::Size(355, 49);
+			this->answer_D->Size = System::Drawing::Size(355, 53);
 			this->answer_D->TabIndex = 5;
 			this->answer_D->Text = L"answer";
 			this->answer_D->TextAlign = System::Drawing::ContentAlignment::MiddleLeft;
@@ -306,10 +326,48 @@ namespace FAMillionaire {
 			this->fa_edition_logo->TabIndex = 8;
 			this->fa_edition_logo->TabStop = false;
 			// 
+			// new_game
+			// 
+			this->new_game->BackColor = System::Drawing::Color::Yellow;
+			this->new_game->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
+			this->new_game->Font = (gcnew System::Drawing::Font(L"Cooper Black", 21.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->new_game->Location = System::Drawing::Point(29, 13);
+			this->new_game->Name = L"new_game";
+			this->new_game->Size = System::Drawing::Size(275, 52);
+			this->new_game->TabIndex = 9;
+			this->new_game->Text = L"New Game";
+			this->new_game->UseVisualStyleBackColor = false;
+			this->new_game->Click += gcnew System::EventHandler(this, &FA_Millionaire::new_game_Click);
+			// 
+			// button1
+			// 
+			this->button1->Location = System::Drawing::Point(1666, 13);
+			this->button1->Name = L"button1";
+			this->button1->Size = System::Drawing::Size(227, 52);
+			this->button1->TabIndex = 10;
+			this->button1->Text = L"button1";
+			this->button1->UseVisualStyleBackColor = true;
+			this->button1->Visible = false;
+			// 
+			// audience_resoults
+			// 
+			this->audience_resoults->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"audience_resoults.Image")));
+			this->audience_resoults->Location = System::Drawing::Point(954, 118);
+			this->audience_resoults->Name = L"audience_resoults";
+			this->audience_resoults->Size = System::Drawing::Size(255, 332);
+			this->audience_resoults->SizeMode = System::Windows::Forms::PictureBoxSizeMode::StretchImage;
+			this->audience_resoults->TabIndex = 11;
+			this->audience_resoults->TabStop = false;
+			this->audience_resoults->Visible = false;
+			// 
 			// FA_Millionaire
 			// 
 			this->BackColor = System::Drawing::Color::Black;
 			this->ClientSize = System::Drawing::Size(1920, 1080);
+			this->Controls->Add(this->audience_resoults);
+			this->Controls->Add(this->button1);
+			this->Controls->Add(this->new_game);
 			this->Controls->Add(this->fa_edition_logo);
 			this->Controls->Add(this->axWindowsMediaPlayer1);
 			this->Controls->Add(this->audience);
@@ -335,6 +393,7 @@ namespace FAMillionaire {
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->question_template))->EndInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->vitesco_logo))->EndInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->fa_edition_logo))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->audience_resoults))->EndInit();
 			this->ResumeLayout(false);
 
 		}
@@ -345,29 +404,72 @@ namespace FAMillionaire {
 
 			if (FAMillionaire::FA_Millionaire::GetTimer() == 500)
 			{
-				axWindowsMediaPlayer1->fullScreen = true;
+				//axWindowsMediaPlayer1->fullScreen = true;
 			}
 
-			if (FAMillionaire::FA_Millionaire::GetTimer() == 17000 /*INTRO_TIME*/)
+			if (FAMillionaire::FA_Millionaire::GetTimer() == 1000 /*INTRO_TIME*/)
 			{
-				axWindowsMediaPlayer1->close();
-				axWindowsMediaPlayer1->Hide();
-				Questions::Questions::StartGame();
+				//axWindowsMediaPlayer1->close();
+				//axWindowsMediaPlayer1->Hide();
+				Questions::Questions::StartNewGame();
 			}
 		}
-		private: System::Void answer_A_Click(System::Object^ sender, System::EventArgs^ e) {
+		private: System::Void answer_A_Click(System::Object^ sender, System::EventArgs^ e) 
+		{
+			Questions::Questions::EvaluateAnswer(answer_A->Text);
 		}
-		private: System::Void answer_B_Click(System::Object^ sender, System::EventArgs^ e) {
+		private: System::Void answer_B_Click(System::Object^ sender, System::EventArgs^ e) 
+		{
+			Questions::Questions::EvaluateAnswer(answer_B->Text);
 		}
-		private: System::Void answer_C_Click(System::Object^ sender, System::EventArgs^ e) {
+		private: System::Void answer_C_Click(System::Object^ sender, System::EventArgs^ e) 
+		{
+			Questions::Questions::EvaluateAnswer(answer_C->Text);
 		}
-		private: System::Void answer_D_Click(System::Object^ sender, System::EventArgs^ e) {
+		private: System::Void answer_D_Click(System::Object^ sender, System::EventArgs^ e) 
+		{
+			Questions::Questions::EvaluateAnswer(answer_D->Text);
 		}
-		private: System::Void fifty_fifty_Click(System::Object^ sender, System::EventArgs^ e) {
+		private: System::Void fifty_fifty_Click(System::Object^ sender, System::EventArgs^ e) 
+		{
+			if (!fifty_fifty_used)
+			{
+				this->fifty_fifty->BackgroundImage = (cli::safe_cast<System::Drawing::Image^>(resources_fa_millionaire->GetObject(L"FA_Millionaire_0001s_0002_50_50 Used")));
+				Questions::Questions::FiftyFifty();
+				fifty_fifty_used = true;
+			}
 		}
-		private: System::Void phone_Click(System::Object^ sender, System::EventArgs^ e) {
+		private: System::Void phone_Click(System::Object^ sender, System::EventArgs^ e) 
+		{
+			if (!phone_used)
+			{
+				phone->BackgroundImage = (cli::safe_cast<System::Drawing::Image^>(resources_fa_millionaire->GetObject(L"FA_Millionaire_0001s_0004_Phone Used")));
+				phone_used = true;
+			}
 		}
-		private: System::Void audience_Click(System::Object^ sender, System::EventArgs^ e) {
+		private: System::Void audience_Click(System::Object^ sender, System::EventArgs^ e) 
+		{
+			if (!audience_used)
+			{
+				audience->BackgroundImage = (cli::safe_cast<System::Drawing::Image^>(resources_fa_millionaire->GetObject(L"FA_Millionaire_0001s_0000_Audience Used")));
+				audience_used = true;
+
+				audience_resoults->Image = (cli::safe_cast<System::Drawing::Image^>(resources_fa_millionaire->GetObject(Questions::Questions::GetAudienceHelp())));
+				audience_resoults->Visible = true;
+			}
+		}
+		private: System::Void new_game_Click(System::Object^ sender, System::EventArgs^ e) 
+		{
+			Questions::Questions::StartNewGame();
+
+			round = 0;
+			audience_used = false;
+			audience->BackgroundImage = (cli::safe_cast<System::Drawing::Image^>(resources_fa_millionaire->GetObject(L"audience.BackgroundImage")));
+			phone_used = false;
+			phone->BackgroundImage = (cli::safe_cast<System::Drawing::Image^>(resources_fa_millionaire->GetObject(L"phone.BackgroundImage")));
+			fifty_fifty_used = false;
+			fifty_fifty->BackgroundImage = (cli::safe_cast<System::Drawing::Image^>(resources_fa_millionaire->GetObject(L"fifty_fifty.BackgroundImage")));
+			audience_resoults->Visible = false;
 		}
 	};
 }
