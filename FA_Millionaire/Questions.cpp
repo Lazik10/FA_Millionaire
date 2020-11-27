@@ -10,6 +10,7 @@
 namespace Questions
 {
     const int MAX_QUESTIONS = 16;
+    const int MAX_ROUNDS = 15;
     int Questions::correct_answer_pos = 0;
     std::string Questions::correct_answer = "";
     int Questions::fifty_fifty_erased_answers[2] = { 0, 0 };
@@ -79,6 +80,9 @@ namespace Questions
 
     void Questions::SelectQuestion()
     {
+        if (FAMillionaire::FA_Millionaire::GetRound() >= MAX_ROUNDS)
+            return;
+
         std::string answerA;
         std::string answerB;
         std::string answerC;
@@ -143,49 +147,118 @@ namespace Questions
         return newSystemString;
     }
 
+    void Questions::FlashAnswerBackground(bool green, int flash_count)
+    {
+        if ((flash_count % 2) == 0)
+        {
+
+            switch (correct_answer_pos)
+            {
+            case 0:
+                FAMillionaire::FA_Millionaire::answer_A->BackColor = System::Drawing::Color::Green;
+                FAMillionaire::FA_Millionaire::answer_A->FlatAppearance->MouseOverBackColor = System::Drawing::Color::Green;
+                break;
+            case 1:
+                FAMillionaire::FA_Millionaire::answer_B->BackColor = System::Drawing::Color::Green;
+                FAMillionaire::FA_Millionaire::answer_B->FlatAppearance->MouseOverBackColor = System::Drawing::Color::Green;
+                break;
+            case 2:
+                FAMillionaire::FA_Millionaire::answer_C->BackColor = System::Drawing::Color::Green;
+                FAMillionaire::FA_Millionaire::answer_C->FlatAppearance->MouseOverBackColor = System::Drawing::Color::Green;
+                break;
+            case 3:
+                FAMillionaire::FA_Millionaire::answer_D->BackColor = System::Drawing::Color::Green;
+                FAMillionaire::FA_Millionaire::answer_D->FlatAppearance->MouseOverBackColor = System::Drawing::Color::Green;
+                break;
+            default:
+                break;
+            }
+        }
+        else
+        {
+            switch (correct_answer_pos)
+            {
+            case 0:
+                FAMillionaire::FA_Millionaire::answer_A->BackColor = System::Drawing::Color::Black;
+                FAMillionaire::FA_Millionaire::answer_A->FlatAppearance->MouseOverBackColor = System::Drawing::Color::Black;
+                break;
+            case 1:
+                FAMillionaire::FA_Millionaire::answer_B->BackColor = System::Drawing::Color::Black;
+                FAMillionaire::FA_Millionaire::answer_A->FlatAppearance->MouseOverBackColor = System::Drawing::Color::Black;
+                break;
+            case 2:
+                FAMillionaire::FA_Millionaire::answer_C->BackColor = System::Drawing::Color::Black;
+                FAMillionaire::FA_Millionaire::answer_A->FlatAppearance->MouseOverBackColor = System::Drawing::Color::Black;
+                break;
+            case 3:
+                FAMillionaire::FA_Millionaire::answer_D->BackColor = System::Drawing::Color::Black;
+                FAMillionaire::FA_Millionaire::answer_A->FlatAppearance->MouseOverBackColor = System::Drawing::Color::Black;
+                break;
+            default:
+                break;
+            }
+        }
+    }
+
     void Questions::StartNewGame()
     {
         SelectQuestion();
         FAMillionaire::FA_Millionaire::SetStatusAnswerSelected(false);
     }
 
-    bool Questions::EvaluateAnswer(System::String^ answer)
+    bool Questions::EvaluateAnswer()
     {
-        if (answer == ConvertToSystemString(correct_answer))
+        int round = FAMillionaire::FA_Millionaire::GetRound();
+
+        if (round >= MAX_ROUNDS)
+            return false;
+
+        // If Correct answer prepare next round and flash the correct answer button
+        if (FAMillionaire::FA_Millionaire::GetSelectedAnswerPos() == correct_answer_pos)
         {
-            int round = FAMillionaire::FA_Millionaire::GetRound();
-            FAMillionaire::FA_Millionaire::SetRound(round++);
-            FAMillionaire::FA_Millionaire::SetStatusAnswerSelected(false);
-            return true;
+            round++;
+            FAMillionaire::FA_Millionaire::SetRound(round);
+            FAMillionaire::FA_Millionaire::SetNextQuestionTimer(5000);
+            if (!(round >= MAX_ROUNDS))
+                FAMillionaire::FA_Millionaire::SetNextQuestion(true);
+
+            FAMillionaire::FA_Millionaire::SetFlashingButton(true);
         }
         else
         {
-            if (FAMillionaire::FA_Millionaire::answer_A->Text == ConvertToSystemString(correct_answer))
-            {
-                FAMillionaire::FA_Millionaire::answer_A->BackColor = System::Drawing::Color::Green;
-                FAMillionaire::FA_Millionaire::answer_A->FlatAppearance->MouseOverBackColor = System::Drawing::Color::Green;
-                FAMillionaire::FA_Millionaire::answer_A->BackgroundImage = nullptr;
-            }
-            else if (FAMillionaire::FA_Millionaire::answer_B->Text == ConvertToSystemString(correct_answer))
-            {
-                FAMillionaire::FA_Millionaire::answer_B->BackColor = System::Drawing::Color::Green;
-                FAMillionaire::FA_Millionaire::answer_B->FlatAppearance->MouseOverBackColor = System::Drawing::Color::Green;
-                FAMillionaire::FA_Millionaire::answer_B->BackgroundImage = nullptr;
-            }
-            else if (FAMillionaire::FA_Millionaire::answer_C->Text == ConvertToSystemString(correct_answer))
-            {
-                FAMillionaire::FA_Millionaire::answer_C->BackColor = System::Drawing::Color::Green;
-                FAMillionaire::FA_Millionaire::answer_C->FlatAppearance->MouseOverBackColor = System::Drawing::Color::Green;
-                FAMillionaire::FA_Millionaire::answer_C->BackgroundImage = nullptr;
-            }
-            else if (FAMillionaire::FA_Millionaire::answer_D->Text == ConvertToSystemString(correct_answer))
-            {
-                FAMillionaire::FA_Millionaire::answer_D->BackColor = System::Drawing::Color::Green;
-                FAMillionaire::FA_Millionaire::answer_D->FlatAppearance->MouseOverBackColor = System::Drawing::Color::Green;
-                FAMillionaire::FA_Millionaire::answer_D->BackgroundImage = nullptr;
-            }
-            return false;
+            FAMillionaire::FA_Millionaire::SetGameStatus(false);
         }
+
+        // If Wrong answer show the correct one
+        if (FAMillionaire::FA_Millionaire::answer_A->Text == ConvertToSystemString(correct_answer))
+        {
+            FAMillionaire::FA_Millionaire::answer_A->BackColor = System::Drawing::Color::Green;
+            FAMillionaire::FA_Millionaire::answer_A->FlatAppearance->MouseOverBackColor = System::Drawing::Color::Green;
+            FAMillionaire::FA_Millionaire::answer_A->BackgroundImage = nullptr;
+        }
+        else if (FAMillionaire::FA_Millionaire::answer_B->Text == ConvertToSystemString(correct_answer))
+        {
+            FAMillionaire::FA_Millionaire::answer_B->BackColor = System::Drawing::Color::Green;
+            FAMillionaire::FA_Millionaire::answer_B->FlatAppearance->MouseOverBackColor = System::Drawing::Color::Green;
+            FAMillionaire::FA_Millionaire::answer_B->BackgroundImage = nullptr;
+        }
+        else if (FAMillionaire::FA_Millionaire::answer_C->Text == ConvertToSystemString(correct_answer))
+        {
+            FAMillionaire::FA_Millionaire::answer_C->BackColor = System::Drawing::Color::Green;
+            FAMillionaire::FA_Millionaire::answer_C->FlatAppearance->MouseOverBackColor = System::Drawing::Color::Green;
+            FAMillionaire::FA_Millionaire::answer_C->BackgroundImage = nullptr;
+        }
+        else if (FAMillionaire::FA_Millionaire::answer_D->Text == ConvertToSystemString(correct_answer))
+        {
+            FAMillionaire::FA_Millionaire::answer_D->BackColor = System::Drawing::Color::Green;
+            FAMillionaire::FA_Millionaire::answer_D->FlatAppearance->MouseOverBackColor = System::Drawing::Color::Green;
+            FAMillionaire::FA_Millionaire::answer_D->BackgroundImage = nullptr;
+        }
+
+        if (FAMillionaire::FA_Millionaire::GetSelectedAnswerPos() == correct_answer_pos)
+            return true;
+        else
+            return false;
     }
 
     void Questions::FiftyFifty()

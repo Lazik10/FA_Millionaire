@@ -39,7 +39,7 @@ namespace FAMillionaire {
 	private: System::Windows::Forms::PictureBox^ vitesco_logo;
 	private: System::Windows::Forms::PictureBox^ fa_edition_logo;
 	private: System::Windows::Forms::Button^ new_game;
-	private: System::Windows::Forms::Button^ button1;
+	private: System::Windows::Forms::Button^ exit;
 	private: System::Windows::Forms::PictureBox^ audience_resoults;
 
 	public: AxWMPLib::AxWindowsMediaPlayer^ axWindowsMediaPlayer1;
@@ -49,10 +49,17 @@ namespace FAMillionaire {
 		static void SetRound(int round);
 		static int GetTimer();
 		static void SetTimer(int diff);
+		static void SetEvaluateTimer(int timer) { evaluate_timer = timer; };
+		static void SetNextQuestionTimer(int timer) { next_question_timer = timer; };
+		static void SetNextQuestion(bool status) { next_question = status; };
 		static bool GetFiftyFiftyStatus() { return fifty_fifty_used; };
 		static bool GetStatusAnswerSelected() { return answer_selected; };
 		static void SetStatusAnswerSelected(bool status) { answer_selected = status; };
-		void SetDefaultState();
+		static int GetSelectedAnswerPos() { return selected_answer_pos; };
+		static void SetGameStatus(bool game_runing) { game_in_progress = game_runing; };
+		static void SetFlashingButton(bool flash) { answer_flashing = flash; };
+		void SetCorrectQuestionPrizeBackground(bool game_over);
+		void SetDefaultState(bool new_game);
 		int GetDesktopResolution(bool horizontal);
 		//void GetDesktopResolution(int& vertical, int& horizontal);
 
@@ -82,10 +89,18 @@ namespace FAMillionaire {
 		/// </summary>
 		static int run_time = 0;
 		static int round = 0;
+		static int next_question_timer = 0;
+		static int evaluate_timer = 0;
+		static int selected_answer_pos = 0;
+		static int flashing_timer = 300;
+		static int flash_count = 0;
 		static bool fifty_fifty_used = false;
 		static bool audience_used = false;
 		static bool phone_used = false;
 		static bool answer_selected = false;
+		static bool next_question = false;
+		static bool game_in_progress = false;
+		static bool answer_flashing = false;
 
 #pragma region Windows Form Designer generated code
 		/// <summary>
@@ -112,7 +127,7 @@ namespace FAMillionaire {
 			this->vitesco_logo = (gcnew System::Windows::Forms::PictureBox());
 			this->fa_edition_logo = (gcnew System::Windows::Forms::PictureBox());
 			this->new_game = (gcnew System::Windows::Forms::Button());
-			this->button1 = (gcnew System::Windows::Forms::Button());
+			this->exit = (gcnew System::Windows::Forms::Button());
 			this->audience_resoults = (gcnew System::Windows::Forms::PictureBox());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->picturePrizeChart))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->background))->BeginInit();
@@ -166,7 +181,6 @@ namespace FAMillionaire {
 			this->question->Name = L"question";
 			this->question->Size = System::Drawing::Size(1024, 108);
 			this->question->TabIndex = 4;
-			this->question->Text = L"";
 			this->question->TextAlign = System::Drawing::ContentAlignment::MiddleCenter;
 			// 
 			// timer
@@ -215,7 +229,6 @@ namespace FAMillionaire {
 			this->answer_B->Name = L"answer_B";
 			this->answer_B->Size = System::Drawing::Size(356, 53);
 			this->answer_B->TabIndex = 5;
-			this->answer_B->Text = L"";
 			this->answer_B->TextAlign = System::Drawing::ContentAlignment::MiddleLeft;
 			this->answer_B->UseVisualStyleBackColor = true;
 			this->answer_B->Click += gcnew System::EventHandler(this, &FA_Millionaire::answer_B_Click);
@@ -238,7 +251,6 @@ namespace FAMillionaire {
 			this->answer_C->Name = L"answer_C";
 			this->answer_C->Size = System::Drawing::Size(356, 53);
 			this->answer_C->TabIndex = 5;
-			this->answer_C->Text = L"";
 			this->answer_C->TextAlign = System::Drawing::ContentAlignment::MiddleLeft;
 			this->answer_C->UseVisualStyleBackColor = true;
 			this->answer_C->Click += gcnew System::EventHandler(this, &FA_Millionaire::answer_C_Click);
@@ -261,7 +273,6 @@ namespace FAMillionaire {
 			this->answer_D->Name = L"answer_D";
 			this->answer_D->Size = System::Drawing::Size(355, 53);
 			this->answer_D->TabIndex = 5;
-			this->answer_D->Text = L"";
 			this->answer_D->TextAlign = System::Drawing::ContentAlignment::MiddleLeft;
 			this->answer_D->UseVisualStyleBackColor = true;
 			this->answer_D->Click += gcnew System::EventHandler(this, &FA_Millionaire::answer_D_Click);
@@ -332,15 +343,19 @@ namespace FAMillionaire {
 			this->new_game->UseVisualStyleBackColor = false;
 			this->new_game->Click += gcnew System::EventHandler(this, &FA_Millionaire::new_game_Click);
 			// 
-			// button1
+			// exit
 			// 
-			this->button1->Location = System::Drawing::Point(1666, 13);
-			this->button1->Name = L"button1";
-			this->button1->Size = System::Drawing::Size(227, 52);
-			this->button1->TabIndex = 10;
-			this->button1->Text = L"button1";
-			this->button1->UseVisualStyleBackColor = true;
-			this->button1->Visible = false;
+			this->exit->BackColor = System::Drawing::Color::Yellow;
+			this->exit->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
+			this->exit->Font = (gcnew System::Drawing::Font(L"Cooper Black", 21.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->exit->Location = System::Drawing::Point(1615, 13);
+			this->exit->Name = L"exit";
+			this->exit->Size = System::Drawing::Size(275, 52);
+			this->exit->TabIndex = 10;
+			this->exit->Text = L"Exit Game";
+			this->exit->UseVisualStyleBackColor = true;
+			this->exit->Click += gcnew System::EventHandler(this, &FA_Millionaire::exit_Click);
 			// 
 			// audience_resoults
 			// 
@@ -358,7 +373,7 @@ namespace FAMillionaire {
 			this->BackColor = System::Drawing::Color::Black;
 			this->ClientSize = System::Drawing::Size(1920, 1080);
 			this->Controls->Add(this->audience_resoults);
-			this->Controls->Add(this->button1);
+			this->Controls->Add(this->exit);
 			this->Controls->Add(this->new_game);
 			this->Controls->Add(this->fa_edition_logo);
 			this->Controls->Add(this->audience);
@@ -402,98 +417,134 @@ namespace FAMillionaire {
 				//axWindowsMediaPlayer1->close();
 				//axWindowsMediaPlayer1->Hide();
 				Questions::Questions::StartNewGame();
+				SetGameStatus(true);
+			}
+
+			if (next_question)
+			{
+				if (next_question_timer <= 0)
+				{
+					Questions::Questions::SelectQuestion();
+					SetDefaultState(false);
+					SetCorrectQuestionPrizeBackground(false);
+					next_question = false;
+				}
+				else
+					next_question_timer -= 100;
+			}
+
+			if (answer_selected)
+			{
+				if (evaluate_timer <= 0)
+				{
+					if (!Questions::Questions::EvaluateAnswer())
+						SetCorrectQuestionPrizeBackground(true);
+					else if (round >= 15)
+						game_in_progress = false;
+					answer_selected = false;
+				}
+				else
+					evaluate_timer -= 100;
+			}
+
+			if (answer_flashing)
+			{
+				if (flashing_timer <= 0)
+				{
+					if (flash_count > 6)
+					{
+						answer_flashing = false;
+						flash_count = 0;
+					}
+
+					if ((flash_count % 2 == 0))
+					{
+						Questions::Questions::FlashAnswerBackground(true, flash_count);
+					}
+					else
+						Questions::Questions::FlashAnswerBackground(false, flash_count);
+
+					flash_count++;
+					flashing_timer = 300;
+				}
+				else
+					flashing_timer -= 100;
 			}
 		}
 		private: System::Void answer_A_Click(System::Object^ sender, System::EventArgs^ e) 
 		{
-			if (!answer_selected)
+			if (!answer_selected && game_in_progress)
 			{
 				answer_A->BackColor = System::Drawing::Color::Orange;
 				answer_A->FlatAppearance->MouseOverBackColor = System::Drawing::Color::Orange;
-
-				if (Questions::Questions::EvaluateAnswer(answer_A->Text))
-				{
-					answer_A->BackColor = System::Drawing::Color::Green;
-					answer_A->FlatAppearance->MouseOverBackColor = System::Drawing::Color::Green;
-				}
-
 				answer_A->BackgroundImage = nullptr;
+
+				selected_answer_pos = 0;
+				SetEvaluateTimer(2000);
 				answer_selected = true;
 			}
 		}
 		private: System::Void answer_B_Click(System::Object^ sender, System::EventArgs^ e) 
 		{
-			if (!answer_selected)
+			if (!answer_selected && game_in_progress)
 			{
 				answer_B->BackColor = System::Drawing::Color::Orange;
 				answer_B->FlatAppearance->MouseOverBackColor = System::Drawing::Color::Orange;
-
-				if (Questions::Questions::EvaluateAnswer(answer_B->Text))
-				{
-					answer_B->BackColor = System::Drawing::Color::Green;
-					answer_B->FlatAppearance->MouseOverBackColor = System::Drawing::Color::Green;
-				}
-
 				answer_B->BackgroundImage = nullptr;
+
+				selected_answer_pos = 1;
+				SetEvaluateTimer(2000);
 				answer_selected = true;
 			}
 		}
 		private: System::Void answer_C_Click(System::Object^ sender, System::EventArgs^ e) 
 		{
-			if (!answer_selected)
+			if (!answer_selected && game_in_progress)
 			{
 				answer_C->BackColor = System::Drawing::Color::Orange;
 				answer_C->FlatAppearance->MouseOverBackColor = System::Drawing::Color::Orange;
-
-				if (Questions::Questions::EvaluateAnswer(answer_C->Text))
-				{
-					answer_C->BackColor = System::Drawing::Color::Green;
-					answer_C->FlatAppearance->MouseOverBackColor = System::Drawing::Color::Green;
-				}
-
 				answer_C->BackgroundImage = nullptr;
+
+				selected_answer_pos = 2;
+				SetEvaluateTimer(2000);
 				answer_selected = true;
 			}
 		}
 		private: System::Void answer_D_Click(System::Object^ sender, System::EventArgs^ e) 
 		{
-			if (!answer_selected)
+			if (!answer_selected && game_in_progress)
 			{
 				answer_D->BackColor = System::Drawing::Color::Orange;
 				answer_D->FlatAppearance->MouseOverBackColor = System::Drawing::Color::Orange;
-
-				if (Questions::Questions::EvaluateAnswer(answer_D->Text))
-				{
-					answer_D->BackColor = System::Drawing::Color::Green;
-					answer_D->FlatAppearance->MouseOverBackColor = System::Drawing::Color::Green;
-				}
-
 				answer_D->BackgroundImage = nullptr;
+
+				selected_answer_pos = 3;
+				SetEvaluateTimer(2000);
 				answer_selected = true;
 			}
 		}
 		private: System::Void fifty_fifty_Click(System::Object^ sender, System::EventArgs^ e) 
 		{
-			if (!fifty_fifty_used && !answer_selected)
+			if (!fifty_fifty_used && !answer_selected && game_in_progress)
 			{
-				//this->fifty_fifty->BackgroundImage = (cli::safe_cast<System::Drawing::Image^>(resources_fa_millionaire->GetObject(L"FA_Millionaire_0001s_0002_50_50 Used")));
+				this->fifty_fifty->BackgroundImage = (cli::safe_cast<System::Drawing::Image^>(resources_fa_millionaire->GetObject(L"FA_Millionaire_0001s_0002_50_50 Used")));
 				Questions::Questions::FiftyFifty();
 				fifty_fifty_used = true;
 			}
 		}
 		private: System::Void phone_Click(System::Object^ sender, System::EventArgs^ e) 
 		{
-			if (!phone_used && !answer_selected)
+			if (!phone_used && !answer_selected && game_in_progress)
 			{
-				//phone->BackgroundImage = (cli::safe_cast<System::Drawing::Image^>(resources_fa_millionaire->GetObject(L"FA_Millionaire_0001s_0004_Phone Used")));
+				phone->BackgroundImage = (cli::safe_cast<System::Drawing::Image^>(resources_fa_millionaire->GetObject(L"FA_Millionaire_0001s_0004_Phone Used")));
 				phone_used = true;
 			}
 		}
 		private: System::Void audience_Click(System::Object^ sender, System::EventArgs^ e) 
 		{
-			if (!audience_used && !answer_selected)
+			if (!audience_used && !answer_selected && game_in_progress)
 			{
-				//audience->BackgroundImage = (cli::safe_cast<System::Drawing::Image^>(resources_fa_millionaire->GetObject(L"FA_Millionaire_0001s_0000_Audience Used")));
+				audience->BackgroundImage = (cli::safe_cast<System::Drawing::Image^>(resources_fa_millionaire->GetObject(L"FA_Millionaire_0001s_0000_Audience Used")));
 				audience_used = true;
 
 				audience_resoults->Image = (cli::safe_cast<System::Drawing::Image^>(resources_fa_millionaire->GetObject(Questions::Questions::GetAudienceHelp())));
@@ -503,7 +554,11 @@ namespace FAMillionaire {
 		private: System::Void new_game_Click(System::Object^ sender, System::EventArgs^ e) 
 		{
 			Questions::Questions::StartNewGame();
-			SetDefaultState();
+			SetDefaultState(true);
+		}
+		private: System::Void exit_Click(System::Object^ sender, System::EventArgs^ e) 
+		{
+			Application::Exit();
 		}
 	};
 }
