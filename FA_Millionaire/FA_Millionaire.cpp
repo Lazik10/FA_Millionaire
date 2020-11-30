@@ -77,6 +77,8 @@ void FAMillionaire::FA_Millionaire::SetDefaultState(bool new_game)
         fifty_fifty->BackgroundImage = (cli::safe_cast<System::Drawing::Image^>(resources_fa_millionaire->GetObject(L"fifty_fifty.BackgroundImage")));
         picturePrizeChart->Image = (cli::safe_cast<System::Drawing::Image^>(resources_fa_millionaire->GetObject(L"picturePrizeChart.Image")));
         game_in_progress = true;
+
+        PlaySound(MAKEINTRESOURCE(IDR_WAVE5), GetModuleHandle(NULL), SND_RESOURCE | SND_LOOP | SND_ASYNC);
     }
 
     audience_resoults->Visible = false;

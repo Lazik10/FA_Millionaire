@@ -15,8 +15,10 @@ namespace Questions
 		static bool EvaluateAnswer();
 		static void FiftyFifty();
 		static System::String^ GetAudienceHelp();
+		static void GetPhoneHelp();
 		static System::String^ ConvertToSystemString(std::string string);
 		void SetCorrectAnswer(int position) { correct_answer_pos = position; };
+		static void PlayCorrectBackgroundSound();
 		static void FlashAnswerBackground(bool green, int flash_count);
 
 	private:

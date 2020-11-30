@@ -1,5 +1,8 @@
 #pragma once
 #include "Questions.h"
+#include <Windows.h>
+#include <mmsystem.h>
+#include "resource.h"
 
 namespace FAMillionaire {
 
@@ -92,7 +95,7 @@ namespace FAMillionaire {
 		static int next_question_timer = 0;
 		static int evaluate_timer = 0;
 		static int selected_answer_pos = 0;
-		static int flashing_timer = 300;
+		static int flashing_timer = 1000;
 		static int flash_count = 0;
 		static bool fifty_fifty_used = false;
 		static bool audience_used = false;
@@ -416,7 +419,7 @@ namespace FAMillionaire {
 			{
 				//axWindowsMediaPlayer1->close();
 				//axWindowsMediaPlayer1->Hide();
-				Questions::Questions::StartNewGame();
+				//Questions::Questions::StartNewGame();
 				SetGameStatus(true);
 			}
 
@@ -451,13 +454,16 @@ namespace FAMillionaire {
 			{
 				if (flashing_timer <= 0)
 				{
-					if (flash_count > 6)
+					if (flash_count > 16)
 					{
 						answer_flashing = false;
 						flash_count = 0;
+
+						if (!(round >= 15))
+							FAMillionaire::FA_Millionaire::SetNextQuestion(true);
 					}
 
-					if ((flash_count % 2 == 0))
+					if ((flash_count % 2 == 0) && !(flash_count > 12))
 					{
 						Questions::Questions::FlashAnswerBackground(true, flash_count);
 					}
@@ -538,6 +544,8 @@ namespace FAMillionaire {
 			{
 				phone->BackgroundImage = (cli::safe_cast<System::Drawing::Image^>(resources_fa_millionaire->GetObject(L"FA_Millionaire_0001s_0004_Phone Used")));
 				phone_used = true;
+
+				Questions::Questions::GetPhoneHelp();
 			}
 		}
 		private: System::Void audience_Click(System::Object^ sender, System::EventArgs^ e) 

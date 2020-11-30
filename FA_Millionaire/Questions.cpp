@@ -83,6 +83,8 @@ namespace Questions
         if (FAMillionaire::FA_Millionaire::GetRound() >= MAX_ROUNDS)
             return;
 
+        PlayCorrectBackgroundSound();
+
         std::string answerA;
         std::string answerB;
         std::string answerC;
@@ -147,6 +149,16 @@ namespace Questions
         return newSystemString;
     }
 
+    void Questions::PlayCorrectBackgroundSound()
+    {
+        if (FAMillionaire::FA_Millionaire::GetRound() < 5)
+            PlaySound(MAKEINTRESOURCE(IDR_WAVE5), GetModuleHandle(NULL), SND_RESOURCE | SND_LOOP | SND_ASYNC);
+        else if (FAMillionaire::FA_Millionaire::GetRound() < 10)
+            PlaySound(MAKEINTRESOURCE(IDR_WAVE6), GetModuleHandle(NULL), SND_RESOURCE | SND_LOOP |SND_ASYNC);
+        else
+            PlaySound(MAKEINTRESOURCE(IDR_WAVE7), GetModuleHandle(NULL), SND_RESOURCE | SND_LOOP | SND_ASYNC);
+    }
+
     void Questions::FlashAnswerBackground(bool green, int flash_count)
     {
         if ((flash_count % 2) == 0)
@@ -184,15 +196,15 @@ namespace Questions
                 break;
             case 1:
                 FAMillionaire::FA_Millionaire::answer_B->BackColor = System::Drawing::Color::Black;
-                FAMillionaire::FA_Millionaire::answer_A->FlatAppearance->MouseOverBackColor = System::Drawing::Color::Black;
+                FAMillionaire::FA_Millionaire::answer_B->FlatAppearance->MouseOverBackColor = System::Drawing::Color::Black;
                 break;
             case 2:
                 FAMillionaire::FA_Millionaire::answer_C->BackColor = System::Drawing::Color::Black;
-                FAMillionaire::FA_Millionaire::answer_A->FlatAppearance->MouseOverBackColor = System::Drawing::Color::Black;
+                FAMillionaire::FA_Millionaire::answer_C->FlatAppearance->MouseOverBackColor = System::Drawing::Color::Black;
                 break;
             case 3:
                 FAMillionaire::FA_Millionaire::answer_D->BackColor = System::Drawing::Color::Black;
-                FAMillionaire::FA_Millionaire::answer_A->FlatAppearance->MouseOverBackColor = System::Drawing::Color::Black;
+                FAMillionaire::FA_Millionaire::answer_D->FlatAppearance->MouseOverBackColor = System::Drawing::Color::Black;
                 break;
             default:
                 break;
@@ -219,14 +231,29 @@ namespace Questions
             round++;
             FAMillionaire::FA_Millionaire::SetRound(round);
             FAMillionaire::FA_Millionaire::SetNextQuestionTimer(5000);
-            if (!(round >= MAX_ROUNDS))
-                FAMillionaire::FA_Millionaire::SetNextQuestion(true);
 
             FAMillionaire::FA_Millionaire::SetFlashingButton(true);
+
+            if (FAMillionaire::FA_Millionaire::GetRound() < 5)
+                PlaySound(MAKEINTRESOURCE(IDR_WAVE9), GetModuleHandle(NULL), SND_RESOURCE | SND_ASYNC);
+            else if (FAMillionaire::FA_Millionaire::GetRound() < 10)
+                PlaySound(MAKEINTRESOURCE(IDR_WAVE11), GetModuleHandle(NULL), SND_RESOURCE | SND_ASYNC);
+            else if (FAMillionaire::FA_Millionaire::GetRound() < 15)
+                PlaySound(MAKEINTRESOURCE(IDR_WAVE13), GetModuleHandle(NULL), SND_RESOURCE | SND_ASYNC);
+            else
+                PlaySound(MAKEINTRESOURCE(IDR_WAVE8), GetModuleHandle(NULL), SND_RESOURCE | SND_ASYNC);
+            return true;
         }
         else
         {
             FAMillionaire::FA_Millionaire::SetGameStatus(false);
+
+            if (FAMillionaire::FA_Millionaire::GetRound() < 5)
+                PlaySound(MAKEINTRESOURCE(IDR_WAVE10), GetModuleHandle(NULL), SND_RESOURCE | SND_ASYNC);
+            else if (FAMillionaire::FA_Millionaire::GetRound() < 10)
+                PlaySound(MAKEINTRESOURCE(IDR_WAVE12), GetModuleHandle(NULL), SND_RESOURCE | SND_ASYNC);
+            else
+                PlaySound(MAKEINTRESOURCE(IDR_WAVE14), GetModuleHandle(NULL), SND_RESOURCE | SND_ASYNC);
         }
 
         // If Wrong answer show the correct one
@@ -278,6 +305,8 @@ namespace Questions
 
         answers.erase(answers.begin() + rand_pos);
         int vector_pos = 0;
+
+        PlaySound(MAKEINTRESOURCE(IDR_WAVE19), GetModuleHandle(NULL), SND_RESOURCE | SND_ASYNC);
         
         for (auto itr = answers.begin(); itr != answers.end(); itr++)
         {
@@ -362,6 +391,65 @@ namespace Questions
             break;
         }
 
+        PlaySound(MAKEINTRESOURCE(IDR_WAVE19), GetModuleHandle(NULL), SND_RESOURCE | SND_ASYNC);
         return audience_answer;
+    }
+
+    void Questions::GetPhoneHelp()
+    {
+        unsigned short int audience_help = correct_answer_pos;
+
+        // Remove correct answer
+        std::vector<unsigned short int> wrong_answer_options{ ANSWER_A, ANSWER_B, ANSWER_C, ANSWER_D };
+        wrong_answer_options.erase(wrong_answer_options.begin() + correct_answer_pos);
+        unsigned int wrong_answer_options_size = wrong_answer_options.size();
+
+        if (FAMillionaire::FA_Millionaire::GetFiftyFiftyStatus())
+        {
+            for (unsigned int i = 0; i < wrong_answer_options_size; i++)
+            {
+                if (wrong_answer_options[i] == fifty_fifty_erased_answers[0] ||
+                    wrong_answer_options[i] == fifty_fifty_erased_answers[1])
+                {
+                    wrong_answer_options.erase(wrong_answer_options.begin() + i);
+                    wrong_answer_options_size--;
+                }
+            }
+        }
+
+        if (FAMillionaire::FA_Millionaire::GetRound() > 4 && FAMillionaire::FA_Millionaire::GetRound() < 10)
+        {
+            // 5% to make the audiance be wrong
+            if ((rand() % 100) < 5)
+            {
+                audience_help = wrong_answer_options[(rand() % wrong_answer_options.size())];
+            }
+        }
+        else if (FAMillionaire::FA_Millionaire::GetRound() >= 10)
+        {
+            // 30% to make the audiance be wrong
+            if ((rand() % 100) < 30)
+            {
+                audience_help = wrong_answer_options[(rand() % wrong_answer_options.size())];
+            }
+        }
+
+        switch (audience_help)
+        {
+        case ANSWER_A:
+            PlaySound(MAKEINTRESOURCE(IDR_WAVE1), GetModuleHandle(NULL), SND_RESOURCE | SND_ASYNC);
+            break;
+        case ANSWER_B:
+            PlaySound(MAKEINTRESOURCE(IDR_WAVE2), GetModuleHandle(NULL), SND_RESOURCE | SND_ASYNC);
+            break;
+        case ANSWER_C:
+            PlaySound(MAKEINTRESOURCE(IDR_WAVE3), GetModuleHandle(NULL), SND_RESOURCE | SND_ASYNC);
+            break;
+        case ANSWER_D:
+            PlaySound(MAKEINTRESOURCE(IDR_WAVE4), GetModuleHandle(NULL), SND_RESOURCE | SND_ASYNC);
+            break;
+        default:
+            break;
+        }
     }
 };

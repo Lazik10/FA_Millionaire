@@ -1,0 +1,105 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "winres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// English (United States) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#include ""winres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// WAVE
+//
+
+IDR_WAVE1               WAVE                    "Resources\\Sound\\01_A answer with background.wav"
+
+IDR_WAVE2               WAVE                    "Resources\\Sound\\02_B answer with background.wav"
+
+IDR_WAVE3               WAVE                    "Resources\\Sound\\03_C answer with background.wav"
+
+IDR_WAVE4               WAVE                    "Resources\\Sound\\04_D answer with background.wav"
+
+IDR_WAVE5               WAVE                    "Resources\\Sound\\10_1000-10000 question background.wav"
+
+IDR_WAVE6               WAVE                    "Resources\\Sound\\10_20000-320000 background.wav"
+
+IDR_WAVE7               WAVE                    "Resources\\Sound\\10_320000-5000000 background.wav"
+
+IDR_WAVE8               WAVE                    "Resources\\Sound\\10M win.wav"
+
+IDR_WAVE9               WAVE                    "Resources\\Sound\\1000-10000 correct answer.wav"
+
+IDR_WAVE10              WAVE                    "Resources\\Sound\\1000-10000 wrong answer.wav"
+
+IDR_WAVE11              WAVE                    "Resources\\Sound\\20000-320000 correctanswer.wav"
+
+IDR_WAVE12              WAVE                    "Resources\\Sound\\20000-320000 wrong answer.wav"
+
+IDR_WAVE13              WAVE                    "Resources\\Sound\\320000-5000000 correct answer.wav"
+
+IDR_WAVE14              WAVE                    "Resources\\Sound\\320000-5000000 wrong answer.wav"
+
+IDR_WAVE15              WAVE                    "Resources\\Sound\\Answer A.wav"
+
+IDR_WAVE16              WAVE                    "Resources\\Sound\\Answer B.wav"
+
+IDR_WAVE17              WAVE                    "Resources\\Sound\\Answer C.wav"
+
+IDR_WAVE18              WAVE                    "Resources\\Sound\\Answer D.wav"
+
+IDR_WAVE19              WAVE                    "Resources\\Sound\\Audience and 50_50 answer.wav"
+
+#endif    // English (United States) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

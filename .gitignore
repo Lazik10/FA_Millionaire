@@ -350,4 +350,8 @@ healthchecksdb
 *.avi
 *.mp4
 *.mov
+
+# Sound
+*.wav
+
 /FA_Millionaire/FA_Millionaire.vcxproj
