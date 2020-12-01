@@ -362,6 +362,29 @@
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</DeploymentContent>
     </Image>
+    <Image Include="Win32\Release\Resources\Images\FA_Millionaire_0000s_0000_Audience A.jpg" />
+    <Image Include="Win32\Release\Resources\Images\FA_Millionaire_0000s_0001_Audience B.jpg" />
+    <Image Include="Win32\Release\Resources\Images\FA_Millionaire_0000s_0002_Audience C.jpg" />
+    <Image Include="Win32\Release\Resources\Images\FA_Millionaire_0000s_0003_Audience D.jpg" />
+    <Image Include="Win32\Release\Resources\Images\FA_Millionaire_0000_Logo.jpg" />
+    <Image Include="Win32\Release\Resources\Images\FA_Millionaire_0001s_0000_Audience Used.jpg" />
+    <Image Include="Win32\Release\Resources\Images\FA_Millionaire_0001s_0002_50_50 Used.jpg" />
+    <Image Include="Win32\Release\Resources\Images\FA_Millionaire_0001s_0004_Phone Used.jpg" />
+    <Image Include="Win32\Release\Resources\Images\FA_Millionaire_0002s_0000_10000000.jpg" />
+    <Image Include="Win32\Release\Resources\Images\FA_Millionaire_0002s_0001_5000000.jpg" />
+    <Image Include="Win32\Release\Resources\Images\FA_Millionaire_0002s_0002_2500000.jpg" />
+    <Image Include="Win32\Release\Resources\Images\FA_Millionaire_0002s_0003_1250000.jpg" />
+    <Image Include="Win32\Release\Resources\Images\FA_Millionaire_0002s_0004_640000.jpg" />
+    <Image Include="Win32\Release\Resources\Images\FA_Millionaire_0002s_0005_320000.jpg" />
+    <Image Include="Win32\Release\Resources\Images\FA_Millionaire_0002s_0006_160000.jpg" />
+    <Image Include="Win32\Release\Resources\Images\FA_Millionaire_0002s_0007_80000.jpg" />
+    <Image Include="Win32\Release\Resources\Images\FA_Millionaire_0002s_0008_40000.jpg" />
+    <Image Include="Win32\Release\Resources\Images\FA_Millionaire_0002s_0009_20000.jpg" />
+    <Image Include="Win32\Release\Resources\Images\FA_Millionaire_0002s_0010_10000.jpg" />
+    <Image Include="Win32\Release\Resources\Images\FA_Millionaire_0002s_0011_5000.jpg" />
+    <Image Include="Win32\Release\Resources\Images\FA_Millionaire_0002s_0012_3000.jpg" />
+    <Image Include="Win32\Release\Resources\Images\FA_Millionaire_0002s_0013_2000.jpg" />
+    <Image Include="Win32\Release\Resources\Images\FA_Millionaire_0002s_0014_1000.jpg" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="Resources\Sound\01_A answer with background.wav">
