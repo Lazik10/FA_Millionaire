@@ -290,6 +290,8 @@ namespace Questions
 
     void Questions::FiftyFifty()
     {
+        PlaySound(MAKEINTRESOURCE(IDR_WAVE19), GetModuleHandle(NULL), SND_RESOURCE | SND_ASYNC);
+
         std::vector<int> answers;
 
         if (FAMillionaire::FA_Millionaire::answer_A->Text != ConvertToSystemString(correct_answer))
@@ -305,8 +307,6 @@ namespace Questions
 
         answers.erase(answers.begin() + rand_pos);
         int vector_pos = 0;
-
-        PlaySound(MAKEINTRESOURCE(IDR_WAVE19), GetModuleHandle(NULL), SND_RESOURCE | SND_ASYNC);
         
         for (auto itr = answers.begin(); itr != answers.end(); itr++)
         {
@@ -331,10 +331,14 @@ namespace Questions
 
             vector_pos++;
         }
+
+        FAMillionaire::FA_Millionaire::SetBackgroundMusic(true);
     }
 
     System::String^ Questions::GetAudienceHelp()
     {
+        PlaySound(MAKEINTRESOURCE(IDR_WAVE19), GetModuleHandle(NULL), SND_RESOURCE | SND_ASYNC);
+
         System::String^ audience_answer = "";
         unsigned short int audience_help = correct_answer_pos;
 
@@ -391,13 +395,14 @@ namespace Questions
             break;
         }
 
-        PlaySound(MAKEINTRESOURCE(IDR_WAVE19), GetModuleHandle(NULL), SND_RESOURCE | SND_ASYNC);
+        FAMillionaire::FA_Millionaire::SetBackgroundMusic(true);
+
         return audience_answer;
     }
 
     void Questions::GetPhoneHelp()
     {
-        unsigned short int audience_help = correct_answer_pos;
+        unsigned short int phone_help = correct_answer_pos;
 
         // Remove correct answer
         std::vector<unsigned short int> wrong_answer_options{ ANSWER_A, ANSWER_B, ANSWER_C, ANSWER_D };
@@ -422,7 +427,7 @@ namespace Questions
             // 5% to make the audiance be wrong
             if ((rand() % 100) < 5)
             {
-                audience_help = wrong_answer_options[(rand() % wrong_answer_options.size())];
+                phone_help = wrong_answer_options[(rand() % wrong_answer_options.size())];
             }
         }
         else if (FAMillionaire::FA_Millionaire::GetRound() >= 10)
@@ -430,26 +435,28 @@ namespace Questions
             // 30% to make the audiance be wrong
             if ((rand() % 100) < 30)
             {
-                audience_help = wrong_answer_options[(rand() % wrong_answer_options.size())];
+                phone_help = wrong_answer_options[(rand() % wrong_answer_options.size())];
             }
         }
 
-        switch (audience_help)
+        switch (phone_help)
         {
         case ANSWER_A:
-            PlaySound(MAKEINTRESOURCE(IDR_WAVE1), GetModuleHandle(NULL), SND_RESOURCE | SND_ASYNC);
+            PlaySound(MAKEINTRESOURCE(IDR_WAVE1), GetModuleHandle(NULL), SND_RESOURCE | SND_SYNC);
             break;
         case ANSWER_B:
-            PlaySound(MAKEINTRESOURCE(IDR_WAVE2), GetModuleHandle(NULL), SND_RESOURCE | SND_ASYNC);
+            PlaySound(MAKEINTRESOURCE(IDR_WAVE2), GetModuleHandle(NULL), SND_RESOURCE | SND_SYNC);
             break;
         case ANSWER_C:
-            PlaySound(MAKEINTRESOURCE(IDR_WAVE3), GetModuleHandle(NULL), SND_RESOURCE | SND_ASYNC);
+            PlaySound(MAKEINTRESOURCE(IDR_WAVE3), GetModuleHandle(NULL), SND_RESOURCE | SND_SYNC);
             break;
         case ANSWER_D:
-            PlaySound(MAKEINTRESOURCE(IDR_WAVE4), GetModuleHandle(NULL), SND_RESOURCE | SND_ASYNC);
+            PlaySound(MAKEINTRESOURCE(IDR_WAVE4), GetModuleHandle(NULL), SND_RESOURCE | SND_SYNC);
             break;
         default:
             break;
         }
+
+        PlayCorrectBackgroundSound();
     }
 };

@@ -61,6 +61,7 @@ namespace FAMillionaire {
 		static int GetSelectedAnswerPos() { return selected_answer_pos; };
 		static void SetGameStatus(bool game_runing) { game_in_progress = game_runing; };
 		static void SetFlashingButton(bool flash) { answer_flashing = flash; };
+		static void SetBackgroundMusic(bool enabled) { background_music = enabled; };
 		void SetCorrectQuestionPrizeBackground(bool game_over);
 		void SetDefaultState(bool new_game);
 		int GetDesktopResolution(bool horizontal);
@@ -96,6 +97,7 @@ namespace FAMillionaire {
 		static int evaluate_timer = 0;
 		static int selected_answer_pos = 0;
 		static int flashing_timer = 1000;
+		static int background_music_timer = 2000;
 		static int flash_count = 0;
 		static bool fifty_fifty_used = false;
 		static bool audience_used = false;
@@ -104,6 +106,7 @@ namespace FAMillionaire {
 		static bool next_question = false;
 		static bool game_in_progress = false;
 		static bool answer_flashing = false;
+		static bool background_music = false;
 		static bool evaluate = false;
 
 #pragma region Windows Form Designer generated code
@@ -442,14 +445,11 @@ namespace FAMillionaire {
 			{
 				if (evaluate_timer <= 0)
 				{
-					//if (!answer_flashing)
-					//{
-						if (!Questions::Questions::EvaluateAnswer())
-							SetCorrectQuestionPrizeBackground(true);
-						else if (round >= 15)
-							game_in_progress = false;
-						evaluate = false;
-					//}
+					if (!Questions::Questions::EvaluateAnswer())
+						SetCorrectQuestionPrizeBackground(true);
+					else if (round >= 15)
+						game_in_progress = false;
+					evaluate = false;
 				}
 				else
 					evaluate_timer -= 100;
@@ -480,6 +480,18 @@ namespace FAMillionaire {
 				}
 				else
 					flashing_timer -= 100;
+			}
+
+			if (background_music)
+			{
+				if (background_music_timer <= 0)
+				{
+					Questions::Questions::PlayCorrectBackgroundSound();
+					background_music = false;
+					background_music_timer = 2000;
+				}
+				else
+					background_music_timer -= 100;
 			}
 		}
 		private: System::Void answer_A_Click(System::Object^ sender, System::EventArgs^ e) 
