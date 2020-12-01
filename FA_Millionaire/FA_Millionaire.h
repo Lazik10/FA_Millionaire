@@ -104,6 +104,7 @@ namespace FAMillionaire {
 		static bool next_question = false;
 		static bool game_in_progress = false;
 		static bool answer_flashing = false;
+		static bool evaluate = false;
 
 #pragma region Windows Form Designer generated code
 		/// <summary>
@@ -431,20 +432,24 @@ namespace FAMillionaire {
 					SetDefaultState(false);
 					SetCorrectQuestionPrizeBackground(false);
 					next_question = false;
+					answer_selected = false;
 				}
 				else
 					next_question_timer -= 100;
 			}
 
-			if (answer_selected)
+			if (evaluate)
 			{
 				if (evaluate_timer <= 0)
 				{
-					if (!Questions::Questions::EvaluateAnswer())
-						SetCorrectQuestionPrizeBackground(true);
-					else if (round >= 15)
-						game_in_progress = false;
-					answer_selected = false;
+					//if (!answer_flashing)
+					//{
+						if (!Questions::Questions::EvaluateAnswer())
+							SetCorrectQuestionPrizeBackground(true);
+						else if (round >= 15)
+							game_in_progress = false;
+						evaluate = false;
+					//}
 				}
 				else
 					evaluate_timer -= 100;
@@ -488,6 +493,7 @@ namespace FAMillionaire {
 				selected_answer_pos = 0;
 				SetEvaluateTimer(2000);
 				answer_selected = true;
+				evaluate = true;
 			}
 		}
 		private: System::Void answer_B_Click(System::Object^ sender, System::EventArgs^ e) 
@@ -501,6 +507,7 @@ namespace FAMillionaire {
 				selected_answer_pos = 1;
 				SetEvaluateTimer(2000);
 				answer_selected = true;
+				evaluate = true;
 			}
 		}
 		private: System::Void answer_C_Click(System::Object^ sender, System::EventArgs^ e) 
@@ -514,6 +521,7 @@ namespace FAMillionaire {
 				selected_answer_pos = 2;
 				SetEvaluateTimer(2000);
 				answer_selected = true;
+				evaluate = true;
 			}
 		}
 		private: System::Void answer_D_Click(System::Object^ sender, System::EventArgs^ e) 
@@ -527,6 +535,7 @@ namespace FAMillionaire {
 				selected_answer_pos = 3;
 				SetEvaluateTimer(2000);
 				answer_selected = true;
+				evaluate = true;
 			}
 		}
 		private: System::Void fifty_fifty_Click(System::Object^ sender, System::EventArgs^ e) 
