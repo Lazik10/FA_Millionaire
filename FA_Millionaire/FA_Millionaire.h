@@ -44,6 +44,10 @@ namespace FAMillionaire {
 	private: System::Windows::Forms::Button^ new_game;
 	private: System::Windows::Forms::Button^ exit;
 	private: System::Windows::Forms::PictureBox^ audience_resoults;
+	private: System::Windows::Forms::Button^ standings;
+	private: System::Windows::Forms::Button^ login;
+	private: System::Windows::Forms::TextBox^ name_box;
+	private: System::Windows::Forms::Label^ player_name_label;
 
 	public: AxWMPLib::AxWindowsMediaPlayer^ axWindowsMediaPlayer1;
 	public:
@@ -108,6 +112,7 @@ namespace FAMillionaire {
 		static bool answer_flashing = false;
 		static bool background_music = false;
 		static bool evaluate = false;
+		static bool login_success = false;
 
 #pragma region Windows Form Designer generated code
 		/// <summary>
@@ -136,6 +141,10 @@ namespace FAMillionaire {
 			this->new_game = (gcnew System::Windows::Forms::Button());
 			this->exit = (gcnew System::Windows::Forms::Button());
 			this->audience_resoults = (gcnew System::Windows::Forms::PictureBox());
+			this->standings = (gcnew System::Windows::Forms::Button());
+			this->login = (gcnew System::Windows::Forms::Button());
+			this->name_box = (gcnew System::Windows::Forms::TextBox());
+			this->player_name_label = (gcnew System::Windows::Forms::Label());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->picturePrizeChart))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->background))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->question_template))->BeginInit();
@@ -320,7 +329,7 @@ namespace FAMillionaire {
 			// vitesco_logo
 			// 
 			this->vitesco_logo->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"vitesco_logo.Image")));
-			this->vitesco_logo->Location = System::Drawing::Point(-1, 0);
+			this->vitesco_logo->Location = System::Drawing::Point(0, 0);
 			this->vitesco_logo->Margin = System::Windows::Forms::Padding(0);
 			this->vitesco_logo->Name = L"vitesco_logo";
 			this->vitesco_logo->Size = System::Drawing::Size(1924, 80);
@@ -356,7 +365,7 @@ namespace FAMillionaire {
 			this->exit->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
 			this->exit->Font = (gcnew System::Drawing::Font(L"Cooper Black", 21.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->exit->Location = System::Drawing::Point(1615, 13);
+			this->exit->Location = System::Drawing::Point(1619, 1016);
 			this->exit->Name = L"exit";
 			this->exit->Size = System::Drawing::Size(275, 52);
 			this->exit->TabIndex = 10;
@@ -375,11 +384,69 @@ namespace FAMillionaire {
 			this->audience_resoults->TabStop = false;
 			this->audience_resoults->Visible = false;
 			// 
+			// standings
+			// 
+			this->standings->BackColor = System::Drawing::Color::Yellow;
+			this->standings->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
+			this->standings->Font = (gcnew System::Drawing::Font(L"Cooper Black", 21.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->standings->Location = System::Drawing::Point(405, 13);
+			this->standings->Name = L"standings";
+			this->standings->Size = System::Drawing::Size(275, 52);
+			this->standings->TabIndex = 9;
+			this->standings->Text = L"Standings";
+			this->standings->UseVisualStyleBackColor = false;
+			// 
+			// login
+			// 
+			this->login->BackColor = System::Drawing::Color::Yellow;
+			this->login->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
+			this->login->Font = (gcnew System::Drawing::Font(L"Cooper Black", 21.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->login->Location = System::Drawing::Point(1619, 13);
+			this->login->Name = L"login";
+			this->login->Size = System::Drawing::Size(275, 52);
+			this->login->TabIndex = 9;
+			this->login->Text = L"Login";
+			this->login->UseVisualStyleBackColor = false;
+			this->login->Click += gcnew System::EventHandler(this, &FA_Millionaire::login_Click);
+			// 
+			// name_box
+			// 
+			this->name_box->BackColor = System::Drawing::Color::White;
+			this->name_box->BorderStyle = System::Windows::Forms::BorderStyle::None;
+			this->name_box->Font = (gcnew System::Drawing::Font(L"Cooper Black", 33, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->name_box->Location = System::Drawing::Point(1214, 13);
+			this->name_box->Margin = System::Windows::Forms::Padding(10);
+			this->name_box->Name = L"name_box";
+			this->name_box->Size = System::Drawing::Size(356, 51);
+			this->name_box->TabIndex = 12;
+			this->name_box->Text = L"...Insert Name...";
+			this->name_box->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
+			this->name_box->Click += gcnew System::EventHandler(this, &FA_Millionaire::name_box_Click);
+			// 
+			// player_name_label
+			// 
+			this->player_name_label->BackColor = System::Drawing::Color::Yellow;
+			this->player_name_label->Font = (gcnew System::Drawing::Font(L"Cooper Black", 28, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->player_name_label->Location = System::Drawing::Point(1229, 18);
+			this->player_name_label->Name = L"player_name_label";
+			this->player_name_label->Size = System::Drawing::Size(275, 52);
+			this->player_name_label->TabIndex = 13;
+			this->player_name_label->Text = L"Player Name";
+			this->player_name_label->Visible = false;
+			// 
 			// FA_Millionaire
 			// 
 			this->BackColor = System::Drawing::Color::Black;
 			this->ClientSize = System::Drawing::Size(1920, 1080);
+			this->Controls->Add(this->name_box);
+			this->Controls->Add(this->player_name_label);
 			this->Controls->Add(this->audience_resoults);
+			this->Controls->Add(this->login);
+			this->Controls->Add(this->standings);
 			this->Controls->Add(this->exit);
 			this->Controls->Add(this->new_game);
 			this->Controls->Add(this->fa_edition_logo);
@@ -407,6 +474,7 @@ namespace FAMillionaire {
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->fa_edition_logo))->EndInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->audience_resoults))->EndInit();
 			this->ResumeLayout(false);
+			this->PerformLayout();
 
 		}
 #pragma endregion
@@ -582,12 +650,41 @@ namespace FAMillionaire {
 		}
 		private: System::Void new_game_Click(System::Object^ sender, System::EventArgs^ e) 
 		{
+			if (login_success == false)
+				return;
+
 			Questions::Questions::StartNewGame();
 			SetDefaultState(true);
 		}
 		private: System::Void exit_Click(System::Object^ sender, System::EventArgs^ e) 
 		{
 			Application::Exit();
+		}
+		private: System::Void login_Click(System::Object^ sender, System::EventArgs^ e) 
+		{
+			if (name_box->Text == "...Insert Name..." || name_box->Text == "")
+				return;
+
+			if (login->Text == "Login")
+			{
+				login->Text = "Logout";
+				name_box->Visible = false;
+				player_name_label->Text = "Player: " + name_box->Text;
+				player_name_label->Visible = true;
+				login_success = true;
+			}
+			else if (login->Text == "Logout")
+			{
+				login->Text = "Login";
+				player_name_label->Visible = false;
+				name_box->Text = "...Insert Name...";
+				name_box->Visible = true;
+				login_success = false;
+			}
+		}
+		private: System::Void name_box_Click(System::Object^ sender, System::EventArgs^ e) 
+		{
+			name_box->Text = "";
 		}
 	};
 }
