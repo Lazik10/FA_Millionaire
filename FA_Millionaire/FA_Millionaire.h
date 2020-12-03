@@ -13,7 +13,7 @@ namespace FAMillionaire {
 	using namespace System::Data;
 	using namespace System::Drawing;
 
-	const int INTRO_TIME = 15000;
+	const int INTRO_TIME = 18000;
 
 	/// <summary>
 	/// Summary for FA_Millionaire
@@ -47,9 +47,10 @@ namespace FAMillionaire {
 	private: System::Windows::Forms::Button^ standings;
 	private: System::Windows::Forms::Button^ login;
 	private: System::Windows::Forms::TextBox^ name_box;
+	private: AxWMPLib::AxWindowsMediaPlayer^ axWindowsMediaPlayer1;
+	private: System::Windows::Forms::PictureBox^ logo_millionaire;
 	private: System::Windows::Forms::Label^ player_name_label;
 
-	public: AxWMPLib::AxWindowsMediaPlayer^ axWindowsMediaPlayer1;
 	public:
 
 		static int GetRound();
@@ -82,7 +83,7 @@ namespace FAMillionaire {
 				delete components;
 			}
 		}
-	//private: AxWMPLib::AxWindowsMediaPlayer^ axWindowsMediaPlayer1;
+
 	private: System::Windows::Forms::PictureBox^ picturePrizeChart;
 	private: System::Windows::Forms::PictureBox^ background;
 	private: System::Windows::Forms::PictureBox^ question_template;
@@ -145,12 +146,16 @@ namespace FAMillionaire {
 			this->login = (gcnew System::Windows::Forms::Button());
 			this->name_box = (gcnew System::Windows::Forms::TextBox());
 			this->player_name_label = (gcnew System::Windows::Forms::Label());
+			this->axWindowsMediaPlayer1 = (gcnew AxWMPLib::AxWindowsMediaPlayer());
+			this->logo_millionaire = (gcnew System::Windows::Forms::PictureBox());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->picturePrizeChart))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->background))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->question_template))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->vitesco_logo))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->fa_edition_logo))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->audience_resoults))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->axWindowsMediaPlayer1))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->logo_millionaire))->BeginInit();
 			this->SuspendLayout();
 			// 
 			// picturePrizeChart
@@ -438,10 +443,30 @@ namespace FAMillionaire {
 			this->player_name_label->Text = L"Player Name";
 			this->player_name_label->Visible = false;
 			// 
+			// axWindowsMediaPlayer1
+			// 
+			this->axWindowsMediaPlayer1->Enabled = true;
+			this->axWindowsMediaPlayer1->Location = System::Drawing::Point(0, 83);
+			this->axWindowsMediaPlayer1->Name = L"axWindowsMediaPlayer1";
+			this->axWindowsMediaPlayer1->OcxState = (cli::safe_cast<System::Windows::Forms::AxHost::State^>(resources->GetObject(L"axWindowsMediaPlayer1.OcxState")));
+			this->axWindowsMediaPlayer1->Size = System::Drawing::Size(293, 197);
+			this->axWindowsMediaPlayer1->TabIndex = 14;
+			// 
+			// logo_millionaire
+			// 
+			this->logo_millionaire->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"logo_millionaire.Image")));
+			this->logo_millionaire->Location = System::Drawing::Point(0, 0);
+			this->logo_millionaire->Name = L"logo_millionaire";
+			this->logo_millionaire->Size = System::Drawing::Size(1920, 1080);
+			this->logo_millionaire->TabIndex = 15;
+			this->logo_millionaire->TabStop = false;
+			// 
 			// FA_Millionaire
 			// 
 			this->BackColor = System::Drawing::Color::Black;
 			this->ClientSize = System::Drawing::Size(1920, 1080);
+			this->Controls->Add(this->logo_millionaire);
+			this->Controls->Add(this->axWindowsMediaPlayer1);
 			this->Controls->Add(this->name_box);
 			this->Controls->Add(this->player_name_label);
 			this->Controls->Add(this->audience_resoults);
@@ -473,6 +498,8 @@ namespace FAMillionaire {
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->vitesco_logo))->EndInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->fa_edition_logo))->EndInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->audience_resoults))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->axWindowsMediaPlayer1))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->logo_millionaire))->EndInit();
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
@@ -484,15 +511,22 @@ namespace FAMillionaire {
 
 			if (FAMillionaire::FA_Millionaire::GetTimer() == 500)
 			{
-				//axWindowsMediaPlayer1->fullScreen = true;
+				axWindowsMediaPlayer1->URL = ".\\Resources\\Video\\intro.mp4";
+				axWindowsMediaPlayer1->Ctlcontrols->play();
+				PlaySound(MAKEINTRESOURCE(IDR_WAVE20), GetModuleHandle(NULL), SND_RESOURCE | SND_ASYNC);
 			}
 
-			if (FAMillionaire::FA_Millionaire::GetTimer() == 1000 /*INTRO_TIME*/)
+			if (FAMillionaire::FA_Millionaire::GetTimer() == 1000)
 			{
-				//axWindowsMediaPlayer1->close();
-				//axWindowsMediaPlayer1->Hide();
+				logo_millionaire->Visible = false;
+			}
+
+			if (FAMillionaire::FA_Millionaire::GetTimer() == INTRO_TIME)
+			{
+				axWindowsMediaPlayer1->close();
+				axWindowsMediaPlayer1->Hide();
 				//Questions::Questions::StartNewGame();
-				SetGameStatus(true);
+				//SetGameStatus(true);
 			}
 
 			if (next_question)

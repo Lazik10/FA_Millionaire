@@ -261,6 +261,12 @@
     <Media Include="Resources\Sound\Answer D.wav">
       <Filter>Resource Files</Filter>
     </Media>
+    <Media Include="Resources\Sound\Intro_sound.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="Resources\Video\intro.wmv">
+      <Filter>Resource Files</Filter>
+    </Media>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="FA_Millionaire.rc">

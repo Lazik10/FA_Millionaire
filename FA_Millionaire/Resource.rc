@@ -88,6 +88,8 @@ IDR_WAVE18              WAVE                    "Resources\\Sound\\Answer D.wav"
 
 IDR_WAVE19              WAVE                    "Resources\\Sound\\Audience and 50_50 answer.wav"
 
+IDR_WAVE20              WAVE                    "Resources\\Sound\\Intro_sound.wav"
+
 #endif    // English (United States) resources
 /////////////////////////////////////////////////////////////////////////////
 
