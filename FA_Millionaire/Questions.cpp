@@ -46,16 +46,10 @@ namespace Questions
         std::string answerC;
         std::string answerD;
 
-        int random_number = 0;
-        srand(time(NULL));
-        random_number = rand() % 1 /*MAX_QUESTIONS*/;
-
         Question selected_question;
-
         selected_question = QuestionSource::GetQuestion();
 
         std::vector<std::string> answers;
-        // TO DO: Replace 0 with random number (this is only for test purpose)
         answers.push_back(selected_question.answer_a);
         answers.push_back(selected_question.answer_b);
         answers.push_back(selected_question.answer_c);
