@@ -687,8 +687,8 @@ namespace FAMillionaire {
 			if (login_success == false)
 				return;
 
-			Questions::Questions::StartNewGame();
 			SetDefaultState(true);
+			Questions::Questions::StartNewGame();
 		}
 		private: System::Void exit_Click(System::Object^ sender, System::EventArgs^ e) 
 		{
