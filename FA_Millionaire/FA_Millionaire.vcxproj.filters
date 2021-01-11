@@ -21,6 +21,9 @@
     <ClCompile Include="Questions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="QuestionSource.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FA_Millionaire.h">
@@ -30,6 +33,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="QuestionSource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -262,9 +268,6 @@
       <Filter>Resource Files</Filter>
     </Media>
     <Media Include="Resources\Sound\Intro_sound.wav">
-      <Filter>Resource Files</Filter>
-    </Media>
-    <Media Include="Resources\Video\intro.wmv">
       <Filter>Resource Files</Filter>
     </Media>
   </ItemGroup>

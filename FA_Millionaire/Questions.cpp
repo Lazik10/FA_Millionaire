@@ -1,3 +1,4 @@
+#pragma once
 // All the required questions for the game FA Millionaire with correct ansers
 #include <ctime>
 #include <vector>
@@ -6,10 +7,10 @@
 #include <cstdlib>
 #include "questions.h"
 #include "FA_Millionaire.h"
+#include "QuestionSource.h"
 
 namespace Questions
 {
-    const int MAX_QUESTIONS = 16;
     const int MAX_ROUNDS = 15;
     int Questions::correct_answer_pos = 0;
     std::string Questions::correct_answer = "";
@@ -23,51 +24,6 @@ namespace Questions
         ANSWER_D,
         WRONG,
         CORRECT,
-    };
-
-    struct Question
-    {
-        std::string question;
-        std::string answer_a;
-        std::string answer_b;
-        std::string answer_c;
-        std::string asnwer_d;
-        std::string question_correct_answer;
-    };    
-
-    Question questions[MAX_QUESTIONS]
-    {
-        // 1000
-        {"Jaky produkt najdeme v FA Lab?", "PS100", "NOX", "Turba", "Aktuaotry", "PS100"},
-        {"", "", "", "", ""},
-        // 2000
-        {"", "", "", "", ""},
-        // 3000
-        {"", "", "", "", ""},
-        // 5000
-        {"", "", "", "", ""},
-        // 10 000 --- Save spot ---
-        {"", "", "", "", ""},
-        // 20 000
-        {"", "", "", "", ""},
-        // 40 000
-        {"", "", "", "", ""},
-        // 80 000
-        {"", "", "", "", ""},
-        // 160 000
-        {"", "", "", "", ""},
-        // 320 000 --- Save spot ---
-        {"", "", "", "", ""},
-        // 640 000
-        {"", "", "", "", ""},
-        // 1 250 000
-        {"", "", "", "", ""},
-        // 2 500 000
-        {"", "", "", "", ""},
-        // 5 000 000
-        {"", "", "", "", ""},
-        // 10 000 000
-        {"", "", "", "", ""},
     };
 
     Questions::Questions()
@@ -94,13 +50,17 @@ namespace Questions
         srand(time(NULL));
         random_number = rand() % 1 /*MAX_QUESTIONS*/;
 
+        Question selected_question;
+
+        selected_question = QuestionSource::GetQuestion();
+
         std::vector<std::string> answers;
         // TO DO: Replace 0 with random number (this is only for test purpose)
-        answers.push_back(questions[0].answer_a);
-        answers.push_back(questions[0].answer_b);
-        answers.push_back(questions[0].answer_c);
-        answers.push_back(questions[0].asnwer_d);
-        correct_answer = questions[0].question_correct_answer;
+        answers.push_back(selected_question.answer_a);
+        answers.push_back(selected_question.answer_b);
+        answers.push_back(selected_question.answer_c);
+        answers.push_back(selected_question.asnwer_d);
+        correct_answer = selected_question.question_correct_answer;
 
         for (int i = 0; i < 4; i++)
         {
@@ -126,16 +86,16 @@ namespace Questions
             answers.erase(answers.begin() + random_answer_number);
         }
 
-        if (answerA == questions->question_correct_answer)
+        if (answerA == correct_answer)
             correct_answer_pos = ANSWER_A;
-        else if (answerB == questions->question_correct_answer)
+        else if (answerB == correct_answer)
             correct_answer_pos = ANSWER_B;
-        else if (answerC == questions->question_correct_answer)
+        else if (answerC == correct_answer)
             correct_answer_pos = ANSWER_C;
-        else if (answerD == questions->question_correct_answer)
+        else if (answerD == correct_answer)
             correct_answer_pos = ANSWER_D;
 
-        FAMillionaire::FA_Millionaire::question->Text = ConvertToSystemString(questions[0].question);
+        FAMillionaire::FA_Millionaire::question->Text = ConvertToSystemString(selected_question.question);
         FAMillionaire::FA_Millionaire::answer_A->Text = ConvertToSystemString(answerA);
         FAMillionaire::FA_Millionaire::answer_B->Text = ConvertToSystemString(answerB);
         FAMillionaire::FA_Millionaire::answer_C->Text = ConvertToSystemString(answerC);
