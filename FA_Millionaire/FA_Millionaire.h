@@ -705,6 +705,17 @@ namespace FAMillionaire {
 				name_box->Visible = false;
 				player_name_label->Text = "Player: " + name_box->Text;
 				player_name_label->Visible = true;
+				float label_size = 28;
+				if (player_name_label->Text->Length >= 5)
+				{
+					label_size -= (2.0f * (player_name_label->Text->Length / 4));
+					player_name_label->Font = (gcnew System::Drawing::Font(L"Cooper Black", label_size, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+						static_cast<System::Byte>(0)));
+					player_name_label->Location = System::Drawing::Point(1229, 22);
+				}
+				else
+					player_name_label->Font = (gcnew System::Drawing::Font(L"Cooper Black", label_size, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+						static_cast<System::Byte>(0)));
 				login_success = true;
 			}
 			else if (login->Text == "Logout")

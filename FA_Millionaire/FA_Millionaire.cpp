@@ -1,3 +1,4 @@
+#pragma once
 #include "FA_Millionaire.h"
 #include "wtypes.h"
 #include "WinUser.h"
