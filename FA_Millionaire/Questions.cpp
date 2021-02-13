@@ -12,6 +12,10 @@
 namespace Questions
 {
     const int MAX_ROUNDS = 15;
+    const int DEFAULT_SAFE_SPOT = 0;
+    const int FIRST_SAFE_SPOT = 4;
+    const int SECOND_SAFE_SPOT = 9;
+    const int WINNER_SPOT = 14;
     int Questions::correct_answer_pos = 0;
     std::string Questions::correct_answer = "";
     int Questions::fifty_fifty_erased_answers[2] = { 0, 0 };
@@ -105,9 +109,9 @@ namespace Questions
 
     void Questions::PlayCorrectBackgroundSound()
     {
-        if (FAMillionaire::FA_Millionaire::GetRound() < 5)
+        if (FAMillionaire::FA_Millionaire::GetRound() <= FIRST_SAFE_SPOT)
             PlaySound(MAKEINTRESOURCE(IDR_WAVE5), GetModuleHandle(NULL), SND_RESOURCE | SND_LOOP | SND_ASYNC);
-        else if (FAMillionaire::FA_Millionaire::GetRound() < 10)
+        else if (FAMillionaire::FA_Millionaire::GetRound() <= SECOND_SAFE_SPOT)
             PlaySound(MAKEINTRESOURCE(IDR_WAVE6), GetModuleHandle(NULL), SND_RESOURCE | SND_LOOP |SND_ASYNC);
         else
             PlaySound(MAKEINTRESOURCE(IDR_WAVE7), GetModuleHandle(NULL), SND_RESOURCE | SND_LOOP | SND_ASYNC);
@@ -188,11 +192,11 @@ namespace Questions
 
             FAMillionaire::FA_Millionaire::SetFlashingButton(true);
 
-            if (FAMillionaire::FA_Millionaire::GetRound() < 5)
+            if (FAMillionaire::FA_Millionaire::GetRound() <= FIRST_SAFE_SPOT)
                 PlaySound(MAKEINTRESOURCE(IDR_WAVE9), GetModuleHandle(NULL), SND_RESOURCE | SND_ASYNC);
-            else if (FAMillionaire::FA_Millionaire::GetRound() < 10)
+            else if (FAMillionaire::FA_Millionaire::GetRound() <= SECOND_SAFE_SPOT)
                 PlaySound(MAKEINTRESOURCE(IDR_WAVE11), GetModuleHandle(NULL), SND_RESOURCE | SND_ASYNC);
-            else if (FAMillionaire::FA_Millionaire::GetRound() < 15)
+            else if (FAMillionaire::FA_Millionaire::GetRound() < WINNER_SPOT)
                 PlaySound(MAKEINTRESOURCE(IDR_WAVE13), GetModuleHandle(NULL), SND_RESOURCE | SND_ASYNC);
             else
                 PlaySound(MAKEINTRESOURCE(IDR_WAVE8), GetModuleHandle(NULL), SND_RESOURCE | SND_ASYNC);
@@ -202,12 +206,23 @@ namespace Questions
         {
             FAMillionaire::FA_Millionaire::SetGameStatus(false);
 
-            if (FAMillionaire::FA_Millionaire::GetRound() < 5)
+            if (FAMillionaire::FA_Millionaire::GetRound() <= FIRST_SAFE_SPOT)
+            {
                 PlaySound(MAKEINTRESOURCE(IDR_WAVE10), GetModuleHandle(NULL), SND_RESOURCE | SND_ASYNC);
-            else if (FAMillionaire::FA_Millionaire::GetRound() < 10)
+                FAMillionaire::FA_Millionaire::SetRound(DEFAULT_SAFE_SPOT);
+            }
+            else if (FAMillionaire::FA_Millionaire::GetRound() <= SECOND_SAFE_SPOT)
+            {
                 PlaySound(MAKEINTRESOURCE(IDR_WAVE12), GetModuleHandle(NULL), SND_RESOURCE | SND_ASYNC);
+                FAMillionaire::FA_Millionaire::SetRound(FIRST_SAFE_SPOT);
+            }
             else
+            {
                 PlaySound(MAKEINTRESOURCE(IDR_WAVE14), GetModuleHandle(NULL), SND_RESOURCE | SND_ASYNC);
+                FAMillionaire::FA_Millionaire::SetRound(SECOND_SAFE_SPOT);
+            }
+
+            FAMillionaire::FA_Millionaire::ModifyStandings(false);
         }
 
         // If Wrong answer show the correct one
@@ -314,7 +329,8 @@ namespace Questions
             }
         }
 
-        if (FAMillionaire::FA_Millionaire::GetRound() > 4 && FAMillionaire::FA_Millionaire::GetRound() < 10)
+        if (FAMillionaire::FA_Millionaire::GetRound() > FIRST_SAFE_SPOT 
+            && FAMillionaire::FA_Millionaire::GetRound() <= SECOND_SAFE_SPOT)
         {
             // 5% to make the audiance be wrong
             if ((rand() % 100) < 5)
@@ -322,7 +338,7 @@ namespace Questions
                 audience_help = wrong_answer_options[(rand() % wrong_answer_options.size())];
             }
         }
-        else if (FAMillionaire::FA_Millionaire::GetRound() >= 10)
+        else if (FAMillionaire::FA_Millionaire::GetRound() > SECOND_SAFE_SPOT)
         {
             // 30% to make the audiance be wrong
             if ((rand() % 100) < 30)
@@ -376,7 +392,8 @@ namespace Questions
             }
         }
 
-        if (FAMillionaire::FA_Millionaire::GetRound() > 4 && FAMillionaire::FA_Millionaire::GetRound() < 10)
+        if (FAMillionaire::FA_Millionaire::GetRound() > FIRST_SAFE_SPOT 
+            && FAMillionaire::FA_Millionaire::GetRound() <= SECOND_SAFE_SPOT)
         {
             // 5% to make the audiance be wrong
             if ((rand() % 100) < 5)
@@ -384,7 +401,7 @@ namespace Questions
                 phone_help = wrong_answer_options[(rand() % wrong_answer_options.size())];
             }
         }
-        else if (FAMillionaire::FA_Millionaire::GetRound() >= 10)
+        else if (FAMillionaire::FA_Millionaire::GetRound() > SECOND_SAFE_SPOT)
         {
             // 30% to make the audiance be wrong
             if ((rand() % 100) < 30)

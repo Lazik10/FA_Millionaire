@@ -3,6 +3,11 @@
 #include <Windows.h>
 #include <mmsystem.h>
 #include "resource.h"
+#include <vector>
+#include <fstream>
+#include <locale>
+#include <vcclr.h>
+#include <sstream>
 
 namespace FAMillionaire {
 
@@ -35,6 +40,7 @@ namespace FAMillionaire {
 	public: static System::Windows::Forms::Button^ answer_C;
 	public: static System::Windows::Forms::Button^ answer_D;
 	public: static System::Windows::Forms::Label^ question;
+	public: static System::Windows::Forms::Label^ player_name_label;
 
 	private: System::Windows::Forms::Button^ fifty_fifty;
 	private: System::Windows::Forms::Button^ phone;
@@ -49,7 +55,6 @@ namespace FAMillionaire {
 	private: System::Windows::Forms::TextBox^ name_box;
 	private: AxWMPLib::AxWindowsMediaPlayer^ axWindowsMediaPlayer1;
 	private: System::Windows::Forms::PictureBox^ logo_millionaire;
-	private: System::Windows::Forms::Label^ player_name_label;
 
 	public:
 
@@ -67,6 +72,7 @@ namespace FAMillionaire {
 		static void SetGameStatus(bool game_runing) { game_in_progress = game_runing; };
 		static void SetFlashingButton(bool flash) { answer_flashing = flash; };
 		static void SetBackgroundMusic(bool enabled) { background_music = enabled; };
+		static void ModifyStandings(bool first_launch);
 		void SetCorrectQuestionPrizeBackground(bool game_over);
 		void SetDefaultState(bool new_game);
 		int GetDesktopResolution(bool horizontal);
@@ -511,6 +517,7 @@ namespace FAMillionaire {
 
 			if (FAMillionaire::FA_Millionaire::GetTimer() == 500)
 			{
+				srand(time(NULL));
 				axWindowsMediaPlayer1->URL = ".\\Resources\\Video\\intro.mp4";
 				axWindowsMediaPlayer1->Ctlcontrols->play();
 				PlaySound(MAKEINTRESOURCE(IDR_WAVE20), GetModuleHandle(NULL), SND_RESOURCE | SND_ASYNC);
@@ -525,8 +532,7 @@ namespace FAMillionaire {
 			{
 				axWindowsMediaPlayer1->close();
 				axWindowsMediaPlayer1->Hide();
-				//Questions::Questions::StartNewGame();
-				//SetGameStatus(true);
+				ModifyStandings(true);
 			}
 
 			if (next_question)
@@ -701,7 +707,7 @@ namespace FAMillionaire {
 
 			if (login->Text == "Login")
 			{
-				login->Text = "Logout";
+				login->Text = "End Game";
 				name_box->Visible = false;
 				player_name_label->Text = "Player: " + name_box->Text;
 				player_name_label->Visible = true;
@@ -718,13 +724,36 @@ namespace FAMillionaire {
 						static_cast<System::Byte>(0)));
 				login_success = true;
 			}
-			else if (login->Text == "Logout")
+			else if (login->Text == "End Game")
 			{
 				login->Text = "Login";
 				player_name_label->Visible = false;
 				name_box->Text = "...Insert Name...";
 				name_box->Visible = true;
 				login_success = false;
+
+				// Decrease round so the final data for standings are taken from previous round (round, money)
+				// with exception for the first round
+				if (round != 0)
+					round--;
+
+				// Prevent duplicit saving when player selects wrong answer (it is already modified there)
+				if (game_in_progress)
+				{
+					SetCorrectQuestionPrizeBackground(false);
+					ModifyStandings(false);
+					PlaySound(MAKEINTRESOURCE(IDR_WAVE10), GetModuleHandle(NULL), SND_RESOURCE | SND_ASYNC);
+				}
+
+				SetDefaultState(false);
+				answer_A->Text = "";
+				answer_B->Text = "";
+				answer_C->Text = "";
+				answer_D->Text = "";
+				question->Text = "";
+
+				game_in_progress = false;
+				// ShowFinalScore();
 			}
 		}
 		private: System::Void name_box_Click(System::Object^ sender, System::EventArgs^ e) 

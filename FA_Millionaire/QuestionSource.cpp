@@ -242,17 +242,6 @@
         { "Šrotaèní protokol TRU_5212_20_037 byl kvuli:", "ukonceni vyroby", "vypadku proudu", "krivym dratkum", "chybejicim datum z CP", "krivym dratkum" },
     };
 
-    
-
-
-    //QuestionSource::QuestionSource()
-    //{
-    //}
-
-    //QuestionSource::~QuestionSource()
-    //{
-    //}
-
     Question QuestionSource::GetQuestion()
     {
         Question question_selected;
