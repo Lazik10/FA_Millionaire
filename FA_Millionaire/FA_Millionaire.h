@@ -10,6 +10,14 @@
 #include <sstream>
 #include <cliext/vector>
 
+struct PlayerData
+{
+	std::wstring round;
+	std::wstring nickname;
+	std::wstring date;
+	std::wstring money;
+};
+
 namespace FAMillionaire {
 
 	using namespace System;
@@ -66,6 +74,7 @@ namespace FAMillionaire {
 	private: System::Windows::Forms::Label^ ninth_position_label;
 	private: System::Windows::Forms::Label^ tenth_position_label;
 	private: System::Windows::Forms::Label^ standings_legend;
+	private: System::Windows::Forms::Label^ final_score;
 	private: System::Windows::Forms::PictureBox^ logo_millionaire;
 
 	public:
@@ -85,7 +94,9 @@ namespace FAMillionaire {
 		static void SetFlashingButton(bool flash) { answer_flashing = flash; };
 		static void SetBackgroundMusic(bool enabled) { background_music = enabled; };
 		static void ModifyStandings(bool first_launch);
+		static FAMillionaire::FA_Millionaire::PlayerData GetPlayerData();
 		static std::vector<std::wstring> GetStandingsInput();
+		void ModifyFinalScoreLabel();
 		void SetCorrectQuestionPrizeBackground(bool game_over);
 		void SetDefaultState(bool new_game);
 		int GetDesktopResolution(bool horizontal);
@@ -179,6 +190,7 @@ namespace FAMillionaire {
 			this->tenth_position_label = (gcnew System::Windows::Forms::Label());
 			this->standings_legend = (gcnew System::Windows::Forms::Label());
 			this->standings_background = (gcnew System::Windows::Forms::PictureBox());
+			this->final_score = (gcnew System::Windows::Forms::Label());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->picturePrizeChart))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->background))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->question_template))->BeginInit();
@@ -484,16 +496,6 @@ namespace FAMillionaire {
 			this->logo_millionaire->TabIndex = 15;
 			this->logo_millionaire->TabStop = false;
 			// 
-			// standings_background
-			// 
-			this->standings_background->BackColor = System::Drawing::Color::Yellow;
-			this->standings_background->Location = System::Drawing::Point(405, 83);
-			this->standings_background->Name = L"standings_background";
-			this->standings_background->Size = System::Drawing::Size(815, 553);
-			this->standings_background->TabIndex = 16;
-			this->standings_background->TabStop = false;
-			this->standings_background->Visible = false;
-			// 
 			// first_position_label
 			// 
 			this->first_position_label->BackColor = System::Drawing::Color::Yellow;
@@ -623,14 +625,39 @@ namespace FAMillionaire {
 			this->standings_legend->Name = L"standings_legend";
 			this->standings_legend->Size = System::Drawing::Size(695, 45);
 			this->standings_legend->TabIndex = 27;
-			this->standings_legend->Text = L"Round  -  Player Name  -  Date  -  Prize Money";
+			this->standings_legend->Text = L"Best Score";
+			this->standings_legend->TextAlign = System::Drawing::ContentAlignment::MiddleCenter;
 			this->standings_legend->Visible = false;
-			this->standings_legend->BringToFront();
+			// 
+			// standings_background
+			// 
+			this->standings_background->BackColor = System::Drawing::Color::Yellow;
+			this->standings_background->Location = System::Drawing::Point(405, 83);
+			this->standings_background->Name = L"standings_background";
+			this->standings_background->Size = System::Drawing::Size(815, 553);
+			this->standings_background->TabIndex = 16;
+			this->standings_background->TabStop = false;
+			this->standings_background->Visible = false;
+			// 
+			// final_score
+			// 
+			this->final_score->BackColor = System::Drawing::Color::Yellow;
+			this->final_score->Font = (gcnew System::Drawing::Font(L"Cooper Black", 36.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->final_score->Location = System::Drawing::Point(120, 665);
+			this->final_score->Name = L"final_score";
+			this->final_score->Size = System::Drawing::Size(977, 149);
+			this->final_score->TabIndex = 28;
+			this->final_score->Text = L"Congratulations";
+			this->final_score->TextAlign = System::Drawing::ContentAlignment::MiddleCenter;
+			this->final_score->Click += gcnew System::EventHandler(this, &FA_Millionaire::final_score_Click);
+			this->final_score->Visible = false;
 			// 
 			// FA_Millionaire
 			// 
 			this->BackColor = System::Drawing::Color::Black;
 			this->ClientSize = System::Drawing::Size(1920, 1080);
+			this->Controls->Add(this->final_score);
 			this->Controls->Add(this->tenth_position_label);
 			this->Controls->Add(this->ninth_position_label);
 			this->Controls->Add(this->eight_position_label);
@@ -721,7 +748,11 @@ namespace FAMillionaire {
 				if (evaluate_timer <= 0)
 				{
 					if (!Questions::Questions::EvaluateAnswer())
+					{
 						SetCorrectQuestionPrizeBackground(true);
+						ModifyFinalScoreLabel();
+						final_score->Visible = true;
+					}
 					else if (round >= 15)
 						game_in_progress = false;
 					evaluate = false;
@@ -876,6 +907,7 @@ namespace FAMillionaire {
 			{
 				login->Text = "End Game";
 				name_box->Visible = false;
+				final_score->Visible = false;
 				player_name_label->Text = "Player: " + name_box->Text;
 				player_name_label->Visible = true;
 				float label_size = 28;
@@ -889,6 +921,14 @@ namespace FAMillionaire {
 				else
 					player_name_label->Font = (gcnew System::Drawing::Font(L"Cooper Black", label_size, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 						static_cast<System::Byte>(0)));
+
+				SetDefaultState(false);
+				answer_A->Text = "";
+				answer_B->Text = "";
+				answer_C->Text = "";
+				answer_D->Text = "";
+				question->Text = "";
+
 				login_success = true;
 			}
 			else if (login->Text == "End Game")
@@ -907,20 +947,17 @@ namespace FAMillionaire {
 				// Prevent duplicit saving when player selects wrong answer (it is already modified there)
 				if (game_in_progress)
 				{
+					selected_answer_pos = -1;
+					Questions::Questions::EvaluateAnswer();
 					SetCorrectQuestionPrizeBackground(false);
 					ModifyStandings(false);
-					PlaySound(MAKEINTRESOURCE(IDR_WAVE10), GetModuleHandle(NULL), SND_RESOURCE | SND_ASYNC);
 				}
 
-				SetDefaultState(false);
-				answer_A->Text = "";
-				answer_B->Text = "";
-				answer_C->Text = "";
-				answer_D->Text = "";
-				question->Text = "";
+				// Show final score
+				ModifyFinalScoreLabel();
+				final_score->Visible = true;
 
 				game_in_progress = false;
-				// ShowFinalScore();
 			}
 		}
 		private: System::Void name_box_Click(System::Object^ sender, System::EventArgs^ e) 
@@ -938,10 +975,13 @@ namespace FAMillionaire {
 			cliext::vector<System::String^> new_standings;
 			int i = 0;
 
-			for (std::vector<std::wstring>::iterator itr = standings.begin(); itr != standings.end(); ++itr)
+			if (!standings.empty())
 			{
-				new_standings.push_back(gcnew String(standings[i].c_str()));
-				i++;
+				for (std::vector<std::wstring>::iterator itr = standings.begin(); itr != standings.end(); ++itr)
+				{
+					new_standings.push_back(gcnew String(standings[i].c_str()));
+					i++;
+				}
 			}
 
 			while (i < 10)
@@ -983,5 +1023,12 @@ namespace FAMillionaire {
 			tenth_position_label->Visible = standings_shown;
 			tenth_position_label->BringToFront();
 		}
-	};
+		private: System::Void final_score_Click(System::Object^ sender, System::EventArgs^ e) 
+		{
+			if (final_score->Visible == true)
+				final_score->Visible = false;
+			else
+				final_score->Visible = true;
+		}
+};
 }

@@ -49,14 +49,6 @@ std::vector<std::wstring> round_name = { L"1", L"2", L"3", L"4",
                                         L"5", L"6", L"7", L"8", L"9",
                                         L"10", L"11", L"12", L"13", L"14", L"15" };
 
-struct PlayerData
-{
-    std::wstring round;
-    std::wstring nickname;
-    std::wstring date;
-    std::wstring money;
-};
-
 [STAThreadAttribute]
 void Main(array<String^>^ args) {
     Application::EnableVisualStyles();
@@ -103,6 +95,7 @@ void FAMillionaire::FA_Millionaire::SetDefaultState(bool new_game)
     }
 
     audience_resoults->Visible = false;
+    final_score->Visible = false;
 
     answer_A->BackColor = System::Drawing::Color::Transparent;
     answer_B->BackColor = System::Drawing::Color::Transparent;
@@ -139,6 +132,33 @@ std::vector<std::wstring> FAMillionaire::FA_Millionaire::GetStandingsInput()
     return temp;
 }
 
+PlayerData FAMillionaire::FA_Millionaire::GetPlayerData()
+{
+    // Player Data
+    PlayerData player;
+
+    player.round = round_name[round];
+
+    String^ player_nickname = player_name_label->Text;
+    // Reduce first 8 letters because of Player: prefix 
+    player_nickname = player_nickname->Substring(8);
+    pin_ptr<const wchar_t> w_player_nickname = PtrToStringChars(player_nickname);
+    player.nickname = w_player_nickname;
+
+    std::time_t t = std::time(nullptr);
+    std::tm timestamp = *std::localtime(&t);
+    static const wchar_t* format = L"%d/%m/%y";
+    std::wostringstream time;
+    time << std::put_time(&timestamp, format);
+    player.date = time.str();
+
+    // Final prize should be from the previous round if player decides to leave
+    // the game without answering question or if he quess the wrong answer
+    player.money = prize_money[round];
+
+    return player;
+}
+
 void FAMillionaire::FA_Millionaire::ModifyStandings(bool first_launch)
 {
     std::wfstream myfile;
@@ -157,28 +177,7 @@ void FAMillionaire::FA_Millionaire::ModifyStandings(bool first_launch)
         std::vector<PlayerData> standings;
         std::vector<std::wstring> temp;
 
-        // Player Data
-        PlayerData player;
-
-        player.round = round_name[round];
-
-        String^ player_nickname = player_name_label->Text;
-        // Reduce first 8 letters because of Player: prefix 
-        player_nickname = player_nickname->Substring(8);
-        pin_ptr<const wchar_t> w_player_nickname = PtrToStringChars(player_nickname);
-        player.nickname = w_player_nickname;
-
-        std::time_t t = std::time(nullptr);
-        std::tm timestamp = *std::localtime(&t);
-        static const wchar_t* format = L"%d/%m/%y";
-        std::wostringstream time;
-        time << std::put_time(&timestamp, format);
-        player.date = time.str();
-
-        // Final prize should be from the previous round if player decides to leave
-        // the game without answering question or if he quess the wrong answer
-        player.money = prize_money[round];
-
+        PlayerData player = GetPlayerData();
         temp = GetStandingsInput();
 
         PlayerData standings_player;
@@ -290,6 +289,14 @@ void FAMillionaire::FA_Millionaire::SetCorrectQuestionPrizeBackground(bool game_
         String^ picture_name = Questions::Questions::ConvertToSystemString(round_prize_background[save_spot_image].background_name);
         picturePrizeChart->Image = (cli::safe_cast<System::Drawing::Image^>(resources_fa_millionaire->GetObject(picture_name)));
     }
+}
+
+void FAMillionaire::FA_Millionaire::ModifyFinalScoreLabel()
+{
+    PlayerData player = GetPlayerData();
+    String^ player_nickname = gcnew String(player.nickname.c_str());
+    String^ player_prize_money = gcnew String(player.money.c_str());
+    final_score->Text = L"Congratulations " + player_nickname + L", you have just won " + player_prize_money + L"!";
 }
 
 //void GetDesktopResolution(int& horizontal, int& vertical)
