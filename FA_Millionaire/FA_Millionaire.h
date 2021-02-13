@@ -950,7 +950,6 @@ namespace FAMillionaire {
 					selected_answer_pos = -1;
 					Questions::Questions::EvaluateAnswer();
 					SetCorrectQuestionPrizeBackground(false);
-					ModifyStandings(false);
 				}
 
 				// Show final score
