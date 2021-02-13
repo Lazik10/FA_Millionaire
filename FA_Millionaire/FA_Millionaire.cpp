@@ -118,10 +118,30 @@ void FAMillionaire::FA_Millionaire::SetDefaultState(bool new_game)
     SetEvaluateTimer(2000);
 }
 
+std::vector<std::wstring> FAMillionaire::FA_Millionaire::GetStandingsInput()
+{
+    // Read the standings file and save the data to vector
+    std::wifstream standings_stream(L"standings.txt");
+    std::locale loc("cs_CZ.UTF-8");
+    standings_stream.imbue(loc);
+    std::vector<std::wstring> temp;
+    std::wstring line;
+
+    if (standings_stream.is_open() && standings_stream.peek() != std::ifstream::traits_type::eof())
+    {
+        while (getline(standings_stream, line))
+        {
+            temp.push_back(line);
+        }
+        standings_stream.close();
+    }
+
+    return temp;
+}
+
 void FAMillionaire::FA_Millionaire::ModifyStandings(bool first_launch)
 {
     std::wfstream myfile;
-    std::wstring line;
     std::locale loc("cs_CZ.UTF-8");
 
     if (first_launch)
@@ -159,19 +179,7 @@ void FAMillionaire::FA_Millionaire::ModifyStandings(bool first_launch)
         // the game without answering question or if he quess the wrong answer
         player.money = prize_money[round];
 
-        // Read the standings file and save the data to vector
-        std::wifstream standings_stream(L"standings.txt");
-        std::locale loc("cs_CZ.UTF-8");
-        standings_stream.imbue(loc);
-
-        if (standings_stream.is_open() && standings_stream.peek() != std::ifstream::traits_type::eof())
-        {
-            while (getline(standings_stream, line))
-            {
-                temp.push_back(line);
-            }
-            standings_stream.close();
-        }
+        temp = GetStandingsInput();
 
         PlayerData standings_player;
         std::wstring standings_data;

@@ -8,6 +8,7 @@
 #include <locale>
 #include <vcclr.h>
 #include <sstream>
+#include <cliext/vector>
 
 namespace FAMillionaire {
 
@@ -53,7 +54,18 @@ namespace FAMillionaire {
 	private: System::Windows::Forms::Button^ standings;
 	private: System::Windows::Forms::Button^ login;
 	private: System::Windows::Forms::TextBox^ name_box;
-	private: AxWMPLib::AxWindowsMediaPlayer^ axWindowsMediaPlayer1;
+	private: System::Windows::Forms::PictureBox^ standings_background;
+	private: System::Windows::Forms::Label^ first_position_label;
+	private: System::Windows::Forms::Label^ second_position_label;
+	private: System::Windows::Forms::Label^ third_position_label;
+	private: System::Windows::Forms::Label^ fourth_position_label;
+	private: System::Windows::Forms::Label^ fifth_position_label;
+	private: System::Windows::Forms::Label^ sixth_position_label;
+	private: System::Windows::Forms::Label^ seventh_position_label;
+	private: System::Windows::Forms::Label^ eight_position_label;
+	private: System::Windows::Forms::Label^ ninth_position_label;
+	private: System::Windows::Forms::Label^ tenth_position_label;
+	private: System::Windows::Forms::Label^ standings_legend;
 	private: System::Windows::Forms::PictureBox^ logo_millionaire;
 
 	public:
@@ -73,6 +85,7 @@ namespace FAMillionaire {
 		static void SetFlashingButton(bool flash) { answer_flashing = flash; };
 		static void SetBackgroundMusic(bool enabled) { background_music = enabled; };
 		static void ModifyStandings(bool first_launch);
+		static std::vector<std::wstring> GetStandingsInput();
 		void SetCorrectQuestionPrizeBackground(bool game_over);
 		void SetDefaultState(bool new_game);
 		int GetDesktopResolution(bool horizontal);
@@ -120,6 +133,7 @@ namespace FAMillionaire {
 		static bool background_music = false;
 		static bool evaluate = false;
 		static bool login_success = false;
+		static bool standings_shown = false;
 
 #pragma region Windows Form Designer generated code
 		/// <summary>
@@ -152,16 +166,27 @@ namespace FAMillionaire {
 			this->login = (gcnew System::Windows::Forms::Button());
 			this->name_box = (gcnew System::Windows::Forms::TextBox());
 			this->player_name_label = (gcnew System::Windows::Forms::Label());
-			this->axWindowsMediaPlayer1 = (gcnew AxWMPLib::AxWindowsMediaPlayer());
 			this->logo_millionaire = (gcnew System::Windows::Forms::PictureBox());
+			this->first_position_label = (gcnew System::Windows::Forms::Label());
+			this->second_position_label = (gcnew System::Windows::Forms::Label());
+			this->third_position_label = (gcnew System::Windows::Forms::Label());
+			this->fourth_position_label = (gcnew System::Windows::Forms::Label());
+			this->fifth_position_label = (gcnew System::Windows::Forms::Label());
+			this->sixth_position_label = (gcnew System::Windows::Forms::Label());
+			this->seventh_position_label = (gcnew System::Windows::Forms::Label());
+			this->eight_position_label = (gcnew System::Windows::Forms::Label());
+			this->ninth_position_label = (gcnew System::Windows::Forms::Label());
+			this->tenth_position_label = (gcnew System::Windows::Forms::Label());
+			this->standings_legend = (gcnew System::Windows::Forms::Label());
+			this->standings_background = (gcnew System::Windows::Forms::PictureBox());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->picturePrizeChart))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->background))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->question_template))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->vitesco_logo))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->fa_edition_logo))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->audience_resoults))->BeginInit();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->axWindowsMediaPlayer1))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->logo_millionaire))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->standings_background))->BeginInit();
 			this->SuspendLayout();
 			// 
 			// picturePrizeChart
@@ -407,6 +432,7 @@ namespace FAMillionaire {
 			this->standings->TabIndex = 9;
 			this->standings->Text = L"Standings";
 			this->standings->UseVisualStyleBackColor = false;
+			this->standings->Click += gcnew System::EventHandler(this, &FA_Millionaire::standings_Click);
 			// 
 			// login
 			// 
@@ -449,15 +475,6 @@ namespace FAMillionaire {
 			this->player_name_label->Text = L"Player Name";
 			this->player_name_label->Visible = false;
 			// 
-			// axWindowsMediaPlayer1
-			// 
-			this->axWindowsMediaPlayer1->Enabled = true;
-			this->axWindowsMediaPlayer1->Location = System::Drawing::Point(0, 83);
-			this->axWindowsMediaPlayer1->Name = L"axWindowsMediaPlayer1";
-			this->axWindowsMediaPlayer1->OcxState = (cli::safe_cast<System::Windows::Forms::AxHost::State^>(resources->GetObject(L"axWindowsMediaPlayer1.OcxState")));
-			this->axWindowsMediaPlayer1->Size = System::Drawing::Size(293, 197);
-			this->axWindowsMediaPlayer1->TabIndex = 14;
-			// 
 			// logo_millionaire
 			// 
 			this->logo_millionaire->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"logo_millionaire.Image")));
@@ -467,12 +484,165 @@ namespace FAMillionaire {
 			this->logo_millionaire->TabIndex = 15;
 			this->logo_millionaire->TabStop = false;
 			// 
+			// standings_background
+			// 
+			this->standings_background->BackColor = System::Drawing::Color::Yellow;
+			this->standings_background->Location = System::Drawing::Point(405, 83);
+			this->standings_background->Name = L"standings_background";
+			this->standings_background->Size = System::Drawing::Size(815, 553);
+			this->standings_background->TabIndex = 16;
+			this->standings_background->TabStop = false;
+			this->standings_background->Visible = false;
+			// 
+			// first_position_label
+			// 
+			this->first_position_label->BackColor = System::Drawing::Color::Yellow;
+			this->first_position_label->Font = (gcnew System::Drawing::Font(L"Cooper Black", 21.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->first_position_label->Location = System::Drawing::Point(445, 164);
+			this->first_position_label->Name = L"first_position_label";
+			this->first_position_label->Size = System::Drawing::Size(695, 45);
+			this->first_position_label->TabIndex = 17;
+			this->first_position_label->Text = L"0 - Player - Date - 0 CZK";
+			this->first_position_label->Visible = false;
+			// 
+			// second_position_label
+			// 
+			this->second_position_label->BackColor = System::Drawing::Color::Yellow;
+			this->second_position_label->Font = (gcnew System::Drawing::Font(L"Cooper Black", 21.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->second_position_label->Location = System::Drawing::Point(445, 209);
+			this->second_position_label->Name = L"second_position_label";
+			this->second_position_label->Size = System::Drawing::Size(695, 45);
+			this->second_position_label->TabIndex = 18;
+			this->second_position_label->Text = L"0 - Player - Date - 0 CZK";
+			this->second_position_label->Visible = false;
+			// 
+			// third_position_label
+			// 
+			this->third_position_label->BackColor = System::Drawing::Color::Yellow;
+			this->third_position_label->Font = (gcnew System::Drawing::Font(L"Cooper Black", 21.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->third_position_label->Location = System::Drawing::Point(445, 254);
+			this->third_position_label->Name = L"third_position_label";
+			this->third_position_label->Size = System::Drawing::Size(695, 45);
+			this->third_position_label->TabIndex = 19;
+			this->third_position_label->Text = L"0 - Player - Date - 0 CZK";
+			this->third_position_label->Visible = false;
+			// 
+			// fourth_position_label
+			// 
+			this->fourth_position_label->BackColor = System::Drawing::Color::Yellow;
+			this->fourth_position_label->Font = (gcnew System::Drawing::Font(L"Cooper Black", 21.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->fourth_position_label->Location = System::Drawing::Point(445, 299);
+			this->fourth_position_label->Name = L"fourth_position_label";
+			this->fourth_position_label->Size = System::Drawing::Size(695, 45);
+			this->fourth_position_label->TabIndex = 20;
+			this->fourth_position_label->Text = L"0 - Player - Date - 0 CZK";
+			this->fourth_position_label->Visible = false;
+			// 
+			// fifth_position_label
+			// 
+			this->fifth_position_label->BackColor = System::Drawing::Color::Yellow;
+			this->fifth_position_label->Font = (gcnew System::Drawing::Font(L"Cooper Black", 21.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->fifth_position_label->Location = System::Drawing::Point(444, 344);
+			this->fifth_position_label->Name = L"fifth_position_label";
+			this->fifth_position_label->Size = System::Drawing::Size(695, 45);
+			this->fifth_position_label->TabIndex = 21;
+			this->fifth_position_label->Text = L"0 - Player - Date - 0 CZK";
+			this->fifth_position_label->Visible = false;
+			// 
+			// sixth_position_label
+			// 
+			this->sixth_position_label->BackColor = System::Drawing::Color::Yellow;
+			this->sixth_position_label->Font = (gcnew System::Drawing::Font(L"Cooper Black", 21.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->sixth_position_label->Location = System::Drawing::Point(445, 389);
+			this->sixth_position_label->Name = L"sixth_position_label";
+			this->sixth_position_label->Size = System::Drawing::Size(695, 45);
+			this->sixth_position_label->TabIndex = 22;
+			this->sixth_position_label->Text = L"0 - Player - Date - 0 CZK";
+			this->sixth_position_label->Visible = false;
+			// 
+			// seventh_position_label
+			// 
+			this->seventh_position_label->BackColor = System::Drawing::Color::Yellow;
+			this->seventh_position_label->Font = (gcnew System::Drawing::Font(L"Cooper Black", 21.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->seventh_position_label->Location = System::Drawing::Point(445, 434);
+			this->seventh_position_label->Name = L"seventh_position_label";
+			this->seventh_position_label->Size = System::Drawing::Size(695, 45);
+			this->seventh_position_label->TabIndex = 23;
+			this->seventh_position_label->Text = L"0 - Player - Date - 0 CZK";
+			this->seventh_position_label->Visible = false;
+			// 
+			// eight_position_label
+			// 
+			this->eight_position_label->BackColor = System::Drawing::Color::Yellow;
+			this->eight_position_label->Font = (gcnew System::Drawing::Font(L"Cooper Black", 21.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->eight_position_label->Location = System::Drawing::Point(445, 479);
+			this->eight_position_label->Name = L"eight_position_label";
+			this->eight_position_label->Size = System::Drawing::Size(695, 45);
+			this->eight_position_label->TabIndex = 24;
+			this->eight_position_label->Text = L"0 - Player - Date - 0 CZK";
+			this->eight_position_label->Visible = false;
+			// 
+			// ninth_position_label
+			// 
+			this->ninth_position_label->BackColor = System::Drawing::Color::Yellow;
+			this->ninth_position_label->Font = (gcnew System::Drawing::Font(L"Cooper Black", 21.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->ninth_position_label->Location = System::Drawing::Point(445, 524);
+			this->ninth_position_label->Name = L"ninth_position_label";
+			this->ninth_position_label->Size = System::Drawing::Size(695, 45);
+			this->ninth_position_label->TabIndex = 25;
+			this->ninth_position_label->Text = L"0 - Player - Date - 0 CZK";
+			this->ninth_position_label->Visible = false;
+			// 
+			// tenth_position_label
+			// 
+			this->tenth_position_label->BackColor = System::Drawing::Color::Yellow;
+			this->tenth_position_label->Font = (gcnew System::Drawing::Font(L"Cooper Black", 21.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->tenth_position_label->Location = System::Drawing::Point(445, 569);
+			this->tenth_position_label->Name = L"tenth_position_label";
+			this->tenth_position_label->Size = System::Drawing::Size(695, 45);
+			this->tenth_position_label->TabIndex = 26;
+			this->tenth_position_label->Text = L"0 - Player - Date - 0 CZK";
+			this->tenth_position_label->Visible = false;
+			// 
+			// standings_legend
+			// 
+			this->standings_legend->BackColor = System::Drawing::Color::Yellow;
+			this->standings_legend->Font = (gcnew System::Drawing::Font(L"Cooper Black", 21.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->standings_legend->Location = System::Drawing::Point(474, 105);
+			this->standings_legend->Name = L"standings_legend";
+			this->standings_legend->Size = System::Drawing::Size(695, 45);
+			this->standings_legend->TabIndex = 27;
+			this->standings_legend->Text = L"Round  -  Player Name  -  Date  -  Prize Money";
+			this->standings_legend->Visible = false;
+			this->standings_legend->BringToFront();
+			// 
 			// FA_Millionaire
 			// 
 			this->BackColor = System::Drawing::Color::Black;
 			this->ClientSize = System::Drawing::Size(1920, 1080);
-			this->Controls->Add(this->logo_millionaire);
-			this->Controls->Add(this->axWindowsMediaPlayer1);
+			this->Controls->Add(this->tenth_position_label);
+			this->Controls->Add(this->ninth_position_label);
+			this->Controls->Add(this->eight_position_label);
+			this->Controls->Add(this->seventh_position_label);
+			this->Controls->Add(this->sixth_position_label);
+			this->Controls->Add(this->fifth_position_label);
+			this->Controls->Add(this->fourth_position_label);
+			this->Controls->Add(this->third_position_label);
+			this->Controls->Add(this->second_position_label);
+			this->Controls->Add(this->first_position_label);
+			this->Controls->Add(this->standings_legend);
+			this->Controls->Add(this->standings_background);
 			this->Controls->Add(this->name_box);
 			this->Controls->Add(this->player_name_label);
 			this->Controls->Add(this->audience_resoults);
@@ -491,8 +661,9 @@ namespace FAMillionaire {
 			this->Controls->Add(this->question);
 			this->Controls->Add(this->vitesco_logo);
 			this->Controls->Add(this->picturePrizeChart);
-			this->Controls->Add(this->background);
 			this->Controls->Add(this->question_template);
+			this->Controls->Add(this->background);
+			this->Controls->Add(this->logo_millionaire);
 			this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::None;
 			this->KeyPreview = true;
 			this->Name = L"FA_Millionaire";
@@ -504,8 +675,8 @@ namespace FAMillionaire {
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->vitesco_logo))->EndInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->fa_edition_logo))->EndInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->audience_resoults))->EndInit();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->axWindowsMediaPlayer1))->EndInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->logo_millionaire))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->standings_background))->EndInit();
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
@@ -518,8 +689,6 @@ namespace FAMillionaire {
 			if (FAMillionaire::FA_Millionaire::GetTimer() == 500)
 			{
 				srand(time(NULL));
-				axWindowsMediaPlayer1->URL = ".\\Resources\\Video\\intro.mp4";
-				axWindowsMediaPlayer1->Ctlcontrols->play();
 				PlaySound(MAKEINTRESOURCE(IDR_WAVE20), GetModuleHandle(NULL), SND_RESOURCE | SND_ASYNC);
 			}
 
@@ -530,8 +699,6 @@ namespace FAMillionaire {
 
 			if (FAMillionaire::FA_Millionaire::GetTimer() == INTRO_TIME)
 			{
-				axWindowsMediaPlayer1->close();
-				axWindowsMediaPlayer1->Hide();
 				ModifyStandings(true);
 			}
 
@@ -759,6 +926,62 @@ namespace FAMillionaire {
 		private: System::Void name_box_Click(System::Object^ sender, System::EventArgs^ e) 
 		{
 			name_box->Text = "";
+		}
+		private: System::Void standings_Click(System::Object^ sender, System::EventArgs^ e) 
+		{ 
+			if (standings_shown == false)
+				standings_shown = true;
+			else
+				standings_shown = false;
+
+			std::vector<std::wstring> standings = GetStandingsInput();
+			cliext::vector<System::String^> new_standings;
+			int i = 0;
+
+			for (std::vector<std::wstring>::iterator itr = standings.begin(); itr != standings.end(); ++itr)
+			{
+				new_standings.push_back(gcnew String(standings[i].c_str()));
+				i++;
+			}
+
+			while (i < 10)
+			{
+				new_standings.push_back("0 - Player - Date - 0 CZK");
+			}
+			
+			standings_background->Visible = standings_shown;
+			standings_legend->Visible = standings_shown;
+			standings_legend->BringToFront();
+			first_position_label->Text = new_standings[0];
+			first_position_label->Visible = standings_shown;
+			first_position_label->BringToFront();
+			second_position_label->Text = new_standings[1];
+			second_position_label->Visible = standings_shown;
+			second_position_label->BringToFront();
+			third_position_label->Text = new_standings[2];
+			third_position_label->Visible = standings_shown;
+			third_position_label->BringToFront();
+			fourth_position_label->Text = new_standings[3];
+			fourth_position_label->Visible = standings_shown;
+			fourth_position_label->BringToFront();
+			fifth_position_label->Text = new_standings[4];
+			fifth_position_label->Visible = standings_shown;
+			fifth_position_label->BringToFront();
+			sixth_position_label->Text = new_standings[5];
+			sixth_position_label->Visible = standings_shown;
+			sixth_position_label->BringToFront();
+			seventh_position_label->Text = new_standings[6];
+			seventh_position_label->Visible = standings_shown;
+			seventh_position_label->BringToFront();
+			eight_position_label->Text = new_standings[7];
+			eight_position_label->Visible = standings_shown;
+			eight_position_label->BringToFront();
+			ninth_position_label->Text = new_standings[8];
+			ninth_position_label->Visible = standings_shown;
+			ninth_position_label->BringToFront();
+			tenth_position_label->Text = new_standings[9];
+			tenth_position_label->Visible = standings_shown;
+			tenth_position_label->BringToFront();
 		}
 	};
 }
