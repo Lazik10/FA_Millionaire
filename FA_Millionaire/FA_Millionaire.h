@@ -75,6 +75,7 @@ namespace FAMillionaire {
 	private: System::Windows::Forms::Label^ tenth_position_label;
 	private: System::Windows::Forms::Label^ standings_legend;
 	private: System::Windows::Forms::Label^ final_score;
+	private: AxWMPLib::AxWindowsMediaPlayer^ axWindowsMediaPlayer1;
 	private: System::Windows::Forms::PictureBox^ logo_millionaire;
 
 	public:
@@ -191,6 +192,7 @@ namespace FAMillionaire {
 			this->standings_legend = (gcnew System::Windows::Forms::Label());
 			this->standings_background = (gcnew System::Windows::Forms::PictureBox());
 			this->final_score = (gcnew System::Windows::Forms::Label());
+			this->axWindowsMediaPlayer1 = (gcnew AxWMPLib::AxWindowsMediaPlayer());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->picturePrizeChart))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->background))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->question_template))->BeginInit();
@@ -199,6 +201,7 @@ namespace FAMillionaire {
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->audience_resoults))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->logo_millionaire))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->standings_background))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->axWindowsMediaPlayer1))->BeginInit();
 			this->SuspendLayout();
 			// 
 			// picturePrizeChart
@@ -650,13 +653,24 @@ namespace FAMillionaire {
 			this->final_score->TabIndex = 28;
 			this->final_score->Text = L"Congratulations";
 			this->final_score->TextAlign = System::Drawing::ContentAlignment::MiddleCenter;
-			this->final_score->Click += gcnew System::EventHandler(this, &FA_Millionaire::final_score_Click);
 			this->final_score->Visible = false;
+			this->final_score->Click += gcnew System::EventHandler(this, &FA_Millionaire::final_score_Click);
+			// 
+			// axWindowsMediaPlayer1
+			// 
+			this->axWindowsMediaPlayer1->Enabled = true;
+			this->axWindowsMediaPlayer1->Location = System::Drawing::Point(0, 83);
+			this->axWindowsMediaPlayer1->Name = L"axWindowsMediaPlayer1";
+			this->axWindowsMediaPlayer1->OcxState = (cli::safe_cast<System::Windows::Forms::AxHost::State^>(resources->GetObject(L"axWindowsMediaPlayer1.OcxState")));
+			this->axWindowsMediaPlayer1->Size = System::Drawing::Size(75, 23);
+			this->axWindowsMediaPlayer1->TabIndex = 29;
 			// 
 			// FA_Millionaire
 			// 
 			this->BackColor = System::Drawing::Color::Black;
 			this->ClientSize = System::Drawing::Size(1920, 1080);
+			this->Controls->Add(this->logo_millionaire);
+			this->Controls->Add(this->axWindowsMediaPlayer1);
 			this->Controls->Add(this->final_score);
 			this->Controls->Add(this->tenth_position_label);
 			this->Controls->Add(this->ninth_position_label);
@@ -690,7 +704,6 @@ namespace FAMillionaire {
 			this->Controls->Add(this->picturePrizeChart);
 			this->Controls->Add(this->question_template);
 			this->Controls->Add(this->background);
-			this->Controls->Add(this->logo_millionaire);
 			this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::None;
 			this->KeyPreview = true;
 			this->Name = L"FA_Millionaire";
@@ -704,6 +717,7 @@ namespace FAMillionaire {
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->audience_resoults))->EndInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->logo_millionaire))->EndInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->standings_background))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->axWindowsMediaPlayer1))->EndInit();
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
@@ -716,16 +730,21 @@ namespace FAMillionaire {
 			if (FAMillionaire::FA_Millionaire::GetTimer() == 500)
 			{
 				srand(time(NULL));
+				axWindowsMediaPlayer1->URL = ".\\Resources\\Video\\Intro.mp4";
+				axWindowsMediaPlayer1->Ctlcontrols->play();
 				PlaySound(MAKEINTRESOURCE(IDR_WAVE20), GetModuleHandle(NULL), SND_RESOURCE | SND_ASYNC);
 			}
 
 			if (FAMillionaire::FA_Millionaire::GetTimer() == 1000)
 			{
+				axWindowsMediaPlayer1->fullScreen = true;
 				logo_millionaire->Visible = false;
 			}
 
 			if (FAMillionaire::FA_Millionaire::GetTimer() == INTRO_TIME)
 			{
+				axWindowsMediaPlayer1->close();
+				axWindowsMediaPlayer1->Hide();
 				ModifyStandings(true);
 			}
 
@@ -747,7 +766,7 @@ namespace FAMillionaire {
 			{
 				if (evaluate_timer <= 0)
 				{
-					if (!Questions::Questions::EvaluateAnswer())
+					if (!Questions::Questions::EvaluateAnswer(false))
 					{
 						SetCorrectQuestionPrizeBackground(true);
 						ModifyFinalScoreLabel();
@@ -948,7 +967,7 @@ namespace FAMillionaire {
 				if (game_in_progress)
 				{
 					selected_answer_pos = -1;
-					Questions::Questions::EvaluateAnswer();
+					Questions::Questions::EvaluateAnswer(true);
 					SetCorrectQuestionPrizeBackground(false);
 				}
 
@@ -985,7 +1004,8 @@ namespace FAMillionaire {
 
 			while (i < 10)
 			{
-				new_standings.push_back("0 - Player - Date - 0 CZK");
+				new_standings.push_back(L"0 - Player - Date - 0 CZK");
+				i++;
 			}
 			
 			standings_background->Visible = standings_shown;

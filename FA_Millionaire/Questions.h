@@ -12,7 +12,7 @@ namespace Questions
 
 		static void StartNewGame();
 		static void SelectQuestion();
-		static bool EvaluateAnswer();
+		static bool EvaluateAnswer(bool end_game);
 		static void FiftyFifty();
 		static System::String^ GetAudienceHelp();
 		static void GetPhoneHelp();

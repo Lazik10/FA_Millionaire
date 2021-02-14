@@ -176,52 +176,71 @@ namespace Questions
         FAMillionaire::FA_Millionaire::SetStatusAnswerSelected(false);
     }
 
-    bool Questions::EvaluateAnswer()
+    bool Questions::EvaluateAnswer(bool end_game)
     {
         int round = FAMillionaire::FA_Millionaire::GetRound();
 
         if (round >= MAX_ROUNDS)
             return false;
-
-        // If Correct answer prepare next round and flash the correct answer button
-        if (FAMillionaire::FA_Millionaire::GetSelectedAnswerPos() == correct_answer_pos)
+        
+        if (!end_game)
         {
-            round++;
-            FAMillionaire::FA_Millionaire::SetRound(round);
-            FAMillionaire::FA_Millionaire::SetNextQuestionTimer(5000);
+            // If Correct answer prepare next round and flash the correct answer button
+            if (FAMillionaire::FA_Millionaire::GetSelectedAnswerPos() == correct_answer_pos)
+            {
+                round++;
+                FAMillionaire::FA_Millionaire::SetRound(round);
+                FAMillionaire::FA_Millionaire::SetNextQuestionTimer(5000);
 
-            FAMillionaire::FA_Millionaire::SetFlashingButton(true);
+                FAMillionaire::FA_Millionaire::SetFlashingButton(true);
 
-            if (FAMillionaire::FA_Millionaire::GetRound() <= FIRST_SAFE_SPOT)
-                PlaySound(MAKEINTRESOURCE(IDR_WAVE9), GetModuleHandle(NULL), SND_RESOURCE | SND_ASYNC);
-            else if (FAMillionaire::FA_Millionaire::GetRound() <= SECOND_SAFE_SPOT)
-                PlaySound(MAKEINTRESOURCE(IDR_WAVE11), GetModuleHandle(NULL), SND_RESOURCE | SND_ASYNC);
-            else if (FAMillionaire::FA_Millionaire::GetRound() < WINNER_SPOT)
-                PlaySound(MAKEINTRESOURCE(IDR_WAVE13), GetModuleHandle(NULL), SND_RESOURCE | SND_ASYNC);
+                if (FAMillionaire::FA_Millionaire::GetRound() <= FIRST_SAFE_SPOT)
+                    PlaySound(MAKEINTRESOURCE(IDR_WAVE9), GetModuleHandle(NULL), SND_RESOURCE | SND_ASYNC);
+                else if (FAMillionaire::FA_Millionaire::GetRound() <= SECOND_SAFE_SPOT)
+                    PlaySound(MAKEINTRESOURCE(IDR_WAVE11), GetModuleHandle(NULL), SND_RESOURCE | SND_ASYNC);
+                else if (FAMillionaire::FA_Millionaire::GetRound() < WINNER_SPOT)
+                    PlaySound(MAKEINTRESOURCE(IDR_WAVE13), GetModuleHandle(NULL), SND_RESOURCE | SND_ASYNC);
+                else
+                    PlaySound(MAKEINTRESOURCE(IDR_WAVE8), GetModuleHandle(NULL), SND_RESOURCE | SND_ASYNC);
+                return true;
+            }
             else
-                PlaySound(MAKEINTRESOURCE(IDR_WAVE8), GetModuleHandle(NULL), SND_RESOURCE | SND_ASYNC);
-            return true;
+            {
+                FAMillionaire::FA_Millionaire::SetGameStatus(false);
+
+                if (FAMillionaire::FA_Millionaire::GetRound() <= FIRST_SAFE_SPOT)
+                {
+                    PlaySound(MAKEINTRESOURCE(IDR_WAVE10), GetModuleHandle(NULL), SND_RESOURCE | SND_ASYNC);
+                    FAMillionaire::FA_Millionaire::SetRound(DEFAULT_SAFE_SPOT);
+                }
+                else if (FAMillionaire::FA_Millionaire::GetRound() <= SECOND_SAFE_SPOT)
+                {
+                    PlaySound(MAKEINTRESOURCE(IDR_WAVE12), GetModuleHandle(NULL), SND_RESOURCE | SND_ASYNC);
+                    FAMillionaire::FA_Millionaire::SetRound(FIRST_SAFE_SPOT);
+                }
+                else
+                {
+                    PlaySound(MAKEINTRESOURCE(IDR_WAVE14), GetModuleHandle(NULL), SND_RESOURCE | SND_ASYNC);
+                    FAMillionaire::FA_Millionaire::SetRound(SECOND_SAFE_SPOT);
+                }
+
+                FAMillionaire::FA_Millionaire::ModifyStandings(false);
+            }
         }
         else
         {
-            FAMillionaire::FA_Millionaire::SetGameStatus(false);
-
             if (FAMillionaire::FA_Millionaire::GetRound() <= FIRST_SAFE_SPOT)
             {
                 PlaySound(MAKEINTRESOURCE(IDR_WAVE10), GetModuleHandle(NULL), SND_RESOURCE | SND_ASYNC);
-                FAMillionaire::FA_Millionaire::SetRound(DEFAULT_SAFE_SPOT);
             }
             else if (FAMillionaire::FA_Millionaire::GetRound() <= SECOND_SAFE_SPOT)
             {
                 PlaySound(MAKEINTRESOURCE(IDR_WAVE12), GetModuleHandle(NULL), SND_RESOURCE | SND_ASYNC);
-                FAMillionaire::FA_Millionaire::SetRound(FIRST_SAFE_SPOT);
             }
             else
             {
                 PlaySound(MAKEINTRESOURCE(IDR_WAVE14), GetModuleHandle(NULL), SND_RESOURCE | SND_ASYNC);
-                FAMillionaire::FA_Millionaire::SetRound(SECOND_SAFE_SPOT);
             }
-
             FAMillionaire::FA_Millionaire::ModifyStandings(false);
         }
 
