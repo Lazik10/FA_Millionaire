@@ -81,18 +81,17 @@ void FAMillionaire::FA_Millionaire::SetDefaultState(bool new_game)
 {
     if (new_game)
     {
+        round = 0;
+        audience_used = false;
+        audience->BackgroundImage = (cli::safe_cast<System::Drawing::Image^>(resources_fa_millionaire->GetObject(L"audience.BackgroundImage")));
+        phone_used = false;
+        phone->BackgroundImage = (cli::safe_cast<System::Drawing::Image^>(resources_fa_millionaire->GetObject(L"phone.BackgroundImage")));
+        fifty_fifty_used = false;
+        fifty_fifty->BackgroundImage = (cli::safe_cast<System::Drawing::Image^>(resources_fa_millionaire->GetObject(L"fifty_fifty.BackgroundImage")));
+        picturePrizeChart->Image = (cli::safe_cast<System::Drawing::Image^>(resources_fa_millionaire->GetObject(L"picturePrizeChart.Image")));
+        game_in_progress = true;
         PlaySound(MAKEINTRESOURCE(IDR_WAVE5), GetModuleHandle(NULL), SND_RESOURCE | SND_LOOP | SND_ASYNC);
     }
-
-    round = 0;
-    audience_used = false;
-    audience->BackgroundImage = (cli::safe_cast<System::Drawing::Image^>(resources_fa_millionaire->GetObject(L"audience.BackgroundImage")));
-    phone_used = false;
-    phone->BackgroundImage = (cli::safe_cast<System::Drawing::Image^>(resources_fa_millionaire->GetObject(L"phone.BackgroundImage")));
-    fifty_fifty_used = false;
-    fifty_fifty->BackgroundImage = (cli::safe_cast<System::Drawing::Image^>(resources_fa_millionaire->GetObject(L"fifty_fifty.BackgroundImage")));
-    picturePrizeChart->Image = (cli::safe_cast<System::Drawing::Image^>(resources_fa_millionaire->GetObject(L"picturePrizeChart.Image")));
-    game_in_progress = true;
 
     audience_resoults->Visible = false;
     final_score->Visible = false;
@@ -217,6 +216,7 @@ void FAMillionaire::FA_Millionaire::ModifyStandings(bool first_launch)
         }
 
         int position_in_standings = 0;
+        bool player_written_into_standings = false;
 
         if (!standings.empty())
         {
@@ -236,11 +236,15 @@ void FAMillionaire::FA_Millionaire::ModifyStandings(bool first_launch)
                 if (standings_round_resoult <= round)
                 {
                     standings.insert(standings.begin() + position_in_standings, player);
+                    player_written_into_standings = true;
                     break;
                 }
 
                 position_in_standings++;
             }
+
+            if (standings.size() < 10 && player_written_into_standings == false)
+                standings.push_back(player);
 
             // Only store 10 best players in Standings
             while (standings.size() > 10)
